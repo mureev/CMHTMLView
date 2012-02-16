@@ -78,17 +78,42 @@
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
     
-    NSString* additionalStyle = @"";
-    if (self.blockTags) {
-        for (NSString* tag in self.blockTags) {
-            additionalStyle = [additionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // Find all img tags
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<img([^<>+]*)>" options:0 error:NULL];
+        NSArray *matchs = [regex matchesInString:html options:0 range:NSMakeRange(0, [html length])];
+        for (NSTextCheckingResult *match in matchs) {
+            int captureIndex;
+            for (captureIndex = 1; captureIndex < match.numberOfRanges; captureIndex++) {
+                NSString * capture = [html substringWithRange:[match rangeAtIndex:captureIndex]];
+                NSLog(@"Found '%@'", capture);
+                
+                // Start loading image for src
+                // Replace src with defult img path if no image cached
+                
+                // Add onClcik js
+                
+                // Add uniq name to img tag
+            }
         }
-    }
-    
-    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
-    
-    NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
-    [self.webView loadHTMLString:body baseURL:nil];
+        
+        // Add blocking some HTML tags
+        NSString* additionalStyle = @"";
+        if (self.blockTags) {
+            for (NSString* tag in self.blockTags) {
+                additionalStyle = [additionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
+            }
+        }
+        
+        // Create <head> for page
+        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
+        
+        // Create full page code
+        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
+        
+        // Start loading
+        [self.webView loadHTMLString:body baseURL:nil];
+    });
 }
 
 
