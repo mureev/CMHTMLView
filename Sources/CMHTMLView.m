@@ -7,12 +7,16 @@
 
 #import "CMHTMLView.h"
 
+#define kNativeShame                @"ormma"
+
 #define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}} %@</style>"
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
 @property (retain) UIWebView*           webView;
 @property (copy) CompetitionBlock       competitionBlock;
+@property (retain) NSString*            jsCode;
+@property (retain) NSArray*             images;
 
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
 
@@ -20,7 +24,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, maxSize, blockTags;
+@synthesize webView, competitionBlock, jsCode, images, maxSize, blockTags, defaultImagePath, imageLoading;
 @dynamic scrollView;
 
 
@@ -56,7 +60,11 @@
     self.webView.delegate = nil;
     self.webView = nil;
     self.competitionBlock = nil;
+    self.jsCode = nil;
+    self.images = nil;
     self.blockTags = nil;
+    self.defaultImagePath = nil;
+    self.imageLoading = nil;
     
     [super dealloc];
 }
@@ -79,21 +87,36 @@
     self.competitionBlock = competition;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString* resultHTML = html;
+        
         // Find all img tags
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<img([^<>+]*)>" options:0 error:NULL];
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:0 error:NULL];
         NSArray *matchs = [regex matchesInString:html options:0 range:NSMakeRange(0, [html length])];
         for (NSTextCheckingResult *match in matchs) {
             int captureIndex;
             for (captureIndex = 1; captureIndex < match.numberOfRanges; captureIndex++) {
-                NSString * capture = [html substringWithRange:[match rangeAtIndex:captureIndex]];
-                NSLog(@"Found '%@'", capture);
+                NSRange range = [match rangeAtIndex:captureIndex];
+                NSString* src = [html substringWithRange:range];
+                NSLog(@"Found src '%@'", src);
+                
+                self.images = [self.images arrayByAddingObject:src];
                 
                 // Start loading image for src
-                // Replace src with defult img path if no image cached
-                
-                // Add onClcik js
+                if (self.imageLoading) {
+                    NSString* path = self.imageLoading(src, ^(NSString* path) {
+                        // reload image with js
+                    });
+                    
+                    // TODO: use ranges insted string replace                    
+                    if (path) {
+                        resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
+                    } else if (self.defaultImagePath) {
+                        resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
+                    }
+                }
                 
                 // Add uniq name to img tag
+                // Add onClcik js - window.location='';
             }
         }
         
@@ -136,11 +159,15 @@
 #pragma mark - UIWebViewDelegate
 
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {    
-    if (navigationType == UIWebViewNavigationTypeOther && [[[request URL] absoluteString] isEqualToString:@"about:blank"]) {
-        return YES;
-    } else {        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"openURL" object:nil];
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if ([[[request URL] scheme] isEqualToString:kNativeShame]) {
+        // working on native callback
+    } else {
+        if (navigationType == UIWebViewNavigationTypeOther && [[[request URL] absoluteString] isEqualToString:@"about:blank"]) {
+            return YES;
+        } else {        
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"openURL" object:nil];
+        }
     }
     
     return NO;
@@ -150,6 +177,10 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    if (self.jsCode) {
+        [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];
+    }
+    
     if (self.competitionBlock) {
         self.competitionBlock(nil);
     }

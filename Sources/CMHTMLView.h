@@ -8,13 +8,19 @@
 #import <UIKit/UIKit.h>
 
 typedef void (^CompetitionBlock)(NSError* error);
+typedef void (^SetImagePathBlock)(NSString* path);
+typedef NSString* (^ImagePathBlock)(NSString* url, SetImagePathBlock setImage);
 
 @interface CMHTMLView : UIView
 
-@property (assign) CGSize               maxSize;
 @property (readonly) UIScrollView*      scrollView;
+@property (readonly) NSArray*           images;
+
+@property (assign) CGSize               maxSize;
 @property (retain) NSArray*             blockTags;
 
+@property (retain) NSString*            defaultImagePath;
+@property (retain) ImagePathBlock       imageLoading;
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
 
