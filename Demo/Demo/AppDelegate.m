@@ -6,6 +6,7 @@
 //
 
 #import "AppDelegate.h"
+#import "RotatingTabBarController.h"
 
 #import "SimpleTextViewController.h"
 #import "TextAndImagesViewController.h"
@@ -48,7 +49,7 @@
     translucentViewController.tabBarItem.image = [UIImage imageNamed:@"translucent.png"];
     translucentViewController.title = @"Translucent";
         
-    self.tabBarController = [[[UITabBarController alloc] init] autorelease];
+    self.tabBarController = [[[RotatingTabBarController alloc] init] autorelease];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, textAndImagesViewController, hugeTextViewController, videoViewController, translucentViewController, nil];
     
     self.window.rootViewController = self.tabBarController;

@@ -7,9 +7,12 @@
 
 #import "CMHTMLView.h"
 
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { img {max-width : %.0fpx;} body {width : %.0fpx;} } @media (orientation: landscape) { img {max-width : %.0fpx;} body {width : %.0fpx;} }</style>"
+
 @interface CMHTMLView() <UIWebViewDelegate>
 
-@property (retain) UIWebView*       webView;
+@property (retain) UIWebView*           webView;
+@property (copy) CompetitionBlock       competitionBlock;
 
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
 
@@ -17,7 +20,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView;
+@synthesize webView, competitionBlock, maxSize;
 @dynamic scrollView;
 
 
@@ -39,6 +42,8 @@
         
         [CMHTMLView removeBackgroundFromWebView:self.webView];      
         [self addSubview:self.webView];
+        
+        self.maxSize = CGSizeZero;
     }
     return self;
 }
@@ -46,6 +51,7 @@
 - (void)dealloc {
     self.webView.delegate = nil;
     self.webView = nil;
+    self.competitionBlock = nil;
     
     [super dealloc];
 }
@@ -64,8 +70,16 @@
     return nil;
 }
 
-- (void)loadHtmlBody:(NSString*)html {
-    NSString* body = [NSString stringWithFormat:@"<html><head><meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:10px; font-family: \"%@\"; font-size: %f;} img {max-width : 300px;}</style></head><body>%@</body></html>", @"helvetica", 14.0, html];
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
+    self.competitionBlock = competition;
+    
+    if (CGSizeEqualToSize(self.maxSize, CGSizeZero)) {
+        self.maxSize = CGSizeMake(320, 480);
+    }
+    
+    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.width-20, self.maxSize.height-18, self.maxSize.height-20];
+    
+    NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
     [self.webView loadHTMLString:body baseURL:nil];
 }
 
@@ -102,11 +116,16 @@
 - (void)webViewDidStartLoad:(UIWebView *)webView {
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HTML loaded" object:self];
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    if (self.competitionBlock) {
+        self.competitionBlock(nil);
+    }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    if (self.competitionBlock) {
+        self.competitionBlock(error);
+    }
 }
 
 @end

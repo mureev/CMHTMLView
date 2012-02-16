@@ -7,11 +7,14 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^CompetitionBlock)(NSError* error);
+
 @interface CMHTMLView : UIView
 
+@property (assign) CGSize               maxSize;
 @property (readonly) UIScrollView*      scrollView;
 
 
-- (void)loadHtmlBody:(NSString*)html;
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
 
 @end
