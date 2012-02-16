@@ -33,16 +33,19 @@
 		ADB1B0FC14ECF0C3007E85C8 /* WarAndPeace.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */; };
 		ADB1B0FF14ECF375007E85C8 /* RotatingTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */; };
 		ADB1B10114ED0783007E85C8 /* Video.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10014ED0783007E85C8 /* Video.html */; };
+		ADB1B10314ED2B23007E85C8 /* icon-iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10214ED2B23007E85C8 /* icon-iphone.png */; };
+		ADB1B10514ED2B28007E85C8 /* icon-iphone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */; };
+		ADB1B10714ED2B2D007E85C8 /* icon-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AD4D9F4A14ECCBF400E0EB9F /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD4D9F4A14ECCBF400E0EB9F /* Demo CMHTMLView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo CMHTMLView.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD4D9F4E14ECCBF400E0EB9F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AD4D9F5014ECCBF400E0EB9F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AD4D9F5214ECCBF400E0EB9F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AD4D9F5614ECCBF400E0EB9F /* Demo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Demo-Info.plist"; sourceTree = "<group>"; };
+		AD4D9F5614ECCBF400E0EB9F /* Demo CMHTMLView-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Demo CMHTMLView-Info.plist"; sourceTree = "<group>"; };
 		AD4D9F5A14ECCBF400E0EB9F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AD4D9F5C14ECCBF400E0EB9F /* Demo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Prefix.pch"; sourceTree = "<group>"; };
+		AD4D9F5C14ECCBF400E0EB9F /* Demo CMHTMLView-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo CMHTMLView-Prefix.pch"; sourceTree = "<group>"; };
 		AD4D9F5D14ECCBF400E0EB9F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AD4D9F5E14ECCBF400E0EB9F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ADB1B0CB14ECCCAA007E85C8 /* Image.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Image.html; sourceTree = "<group>"; };
@@ -73,6 +76,9 @@
 		ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotatingTabBarController.h; path = Demo/RotatingTabBarController.h; sourceTree = SOURCE_ROOT; };
 		ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotatingTabBarController.m; path = Demo/RotatingTabBarController.m; sourceTree = SOURCE_ROOT; };
 		ADB1B10014ED0783007E85C8 /* Video.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Video.html; sourceTree = "<group>"; };
+		ADB1B10214ED2B23007E85C8 /* icon-iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-iphone.png"; sourceTree = "<group>"; };
+		ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-iphone@2x.png"; sourceTree = "<group>"; };
+		ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-ipad.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,9 @@
 		AD4D9F3F14ECCBF400E0EB9F = {
 			isa = PBXGroup;
 			children = (
+				ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */,
+				ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */,
+				ADB1B10214ED2B23007E85C8 /* icon-iphone.png */,
 				AD4D9F5414ECCBF400E0EB9F /* Demo */,
 				AD4D9F4D14ECCBF400E0EB9F /* Frameworks */,
 				AD4D9F4B14ECCBF400E0EB9F /* Products */,
@@ -101,7 +110,7 @@
 		AD4D9F4B14ECCBF400E0EB9F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AD4D9F4A14ECCBF400E0EB9F /* Demo.app */,
+				AD4D9F4A14ECCBF400E0EB9F /* Demo CMHTMLView.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,9 +143,9 @@
 		AD4D9F5514ECCBF400E0EB9F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AD4D9F5614ECCBF400E0EB9F /* Demo-Info.plist */,
+				AD4D9F5614ECCBF400E0EB9F /* Demo CMHTMLView-Info.plist */,
 				AD4D9F5A14ECCBF400E0EB9F /* main.m */,
-				AD4D9F5C14ECCBF400E0EB9F /* Demo-Prefix.pch */,
+				AD4D9F5C14ECCBF400E0EB9F /* Demo CMHTMLView-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -200,9 +209,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AD4D9F4914ECCBF400E0EB9F /* Demo */ = {
+		AD4D9F4914ECCBF400E0EB9F /* Demo CMHTMLView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AD4D9F7C14ECCBF400E0EB9F /* Build configuration list for PBXNativeTarget "Demo" */;
+			buildConfigurationList = AD4D9F7C14ECCBF400E0EB9F /* Build configuration list for PBXNativeTarget "Demo CMHTMLView" */;
 			buildPhases = (
 				AD4D9F4614ECCBF400E0EB9F /* Sources */,
 				AD4D9F4714ECCBF400E0EB9F /* Frameworks */,
@@ -212,9 +221,9 @@
 			);
 			dependencies = (
 			);
-			name = Demo;
+			name = "Demo CMHTMLView";
 			productName = Demo;
-			productReference = AD4D9F4A14ECCBF400E0EB9F /* Demo.app */;
+			productReference = AD4D9F4A14ECCBF400E0EB9F /* Demo CMHTMLView.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -226,7 +235,7 @@
 				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "Team Force LLC";
 			};
-			buildConfigurationList = AD4D9F4414ECCBF400E0EB9F /* Build configuration list for PBXProject "Demo" */;
+			buildConfigurationList = AD4D9F4414ECCBF400E0EB9F /* Build configuration list for PBXProject "Demo CMHTMLView" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -238,7 +247,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AD4D9F4914ECCBF400E0EB9F /* Demo */,
+				AD4D9F4914ECCBF400E0EB9F /* Demo CMHTMLView */,
 			);
 		};
 /* End PBXProject section */
@@ -262,6 +271,9 @@
 				ADB1B0FA14ECEE0A007E85C8 /* Simple.html in Resources */,
 				ADB1B0FC14ECF0C3007E85C8 /* WarAndPeace.html in Resources */,
 				ADB1B10114ED0783007E85C8 /* Video.html in Resources */,
+				ADB1B10314ED2B23007E85C8 /* icon-iphone.png in Resources */,
+				ADB1B10514ED2B28007E85C8 /* icon-iphone@2x.png in Resources */,
+				ADB1B10714ED2B2D007E85C8 /* icon-ipad.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,9 +348,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
-				INFOPLIST_FILE = "Demo/Demo-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "Demo/Demo CMHTMLView-Prefix.pch";
+				INFOPLIST_FILE = "Demo/Demo CMHTMLView-Info.plist";
+				PRODUCT_NAME = "Demo CMHTMLView";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -347,9 +359,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Demo/Demo-Prefix.pch";
-				INFOPLIST_FILE = "Demo/Demo-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "Demo/Demo CMHTMLView-Prefix.pch";
+				INFOPLIST_FILE = "Demo/Demo CMHTMLView-Info.plist";
+				PRODUCT_NAME = "Demo CMHTMLView";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -357,7 +369,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AD4D9F4414ECCBF400E0EB9F /* Build configuration list for PBXProject "Demo" */ = {
+		AD4D9F4414ECCBF400E0EB9F /* Build configuration list for PBXProject "Demo CMHTMLView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AD4D9F7A14ECCBF400E0EB9F /* Debug */,
@@ -366,7 +378,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AD4D9F7C14ECCBF400E0EB9F /* Build configuration list for PBXNativeTarget "Demo" */ = {
+		AD4D9F7C14ECCBF400E0EB9F /* Build configuration list for PBXNativeTarget "Demo CMHTMLView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AD4D9F7D14ECCBF400E0EB9F /* Debug */,
