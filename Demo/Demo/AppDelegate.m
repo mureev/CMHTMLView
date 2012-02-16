@@ -48,9 +48,11 @@
     TranslucentViewController* translucentViewController = [[TranslucentViewController new] autorelease];
     translucentViewController.tabBarItem.image = [UIImage imageNamed:@"translucent.png"];
     translucentViewController.title = @"Translucent";
+    UINavigationController* navController = [[[UINavigationController alloc] initWithRootViewController:translucentViewController] autorelease];
+    navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         
     self.tabBarController = [[[RotatingTabBarController alloc] init] autorelease];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, textAndImagesViewController, hugeTextViewController, videoViewController, translucentViewController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, textAndImagesViewController, hugeTextViewController, videoViewController, navController, nil];
     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
