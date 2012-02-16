@@ -43,7 +43,11 @@
         [CMHTMLView removeBackgroundFromWebView:self.webView];      
         [self addSubview:self.webView];
         
-        self.maxSize = CGSizeZero;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+            self.maxSize = CGSizeMake(320, 480);
+        } else {
+            self.maxSize = CGSizeMake(768, 1024);
+        }
     }
     return self;
 }
@@ -72,10 +76,6 @@
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
-    
-    if (CGSizeEqualToSize(self.maxSize, CGSizeZero)) {
-        self.maxSize = CGSizeMake(320, 480);
-    }
     
     NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18];
     

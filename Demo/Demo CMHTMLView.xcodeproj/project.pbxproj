@@ -76,9 +76,9 @@
 		ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotatingTabBarController.h; path = Demo/RotatingTabBarController.h; sourceTree = SOURCE_ROOT; };
 		ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotatingTabBarController.m; path = Demo/RotatingTabBarController.m; sourceTree = SOURCE_ROOT; };
 		ADB1B10014ED0783007E85C8 /* Video.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Video.html; sourceTree = "<group>"; };
-		ADB1B10214ED2B23007E85C8 /* icon-iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-iphone.png"; sourceTree = "<group>"; };
-		ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-iphone@2x.png"; sourceTree = "<group>"; };
-		ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-ipad.png"; sourceTree = "<group>"; };
+		ADB1B10214ED2B23007E85C8 /* icon-iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-iphone.png"; path = "../../icon-iphone.png"; sourceTree = "<group>"; };
+		ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-iphone@2x.png"; path = "../../icon-iphone@2x.png"; sourceTree = "<group>"; };
+		ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-ipad.png"; path = "../../icon-ipad.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,9 +98,6 @@
 		AD4D9F3F14ECCBF400E0EB9F = {
 			isa = PBXGroup;
 			children = (
-				ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */,
-				ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */,
-				ADB1B10214ED2B23007E85C8 /* icon-iphone.png */,
 				AD4D9F5414ECCBF400E0EB9F /* Demo */,
 				AD4D9F4D14ECCBF400E0EB9F /* Frameworks */,
 				AD4D9F4B14ECCBF400E0EB9F /* Products */,
@@ -153,6 +150,9 @@
 		ADB1B0CA14ECCCAA007E85C8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				ADB1B10614ED2B2D007E85C8 /* icon-ipad.png */,
+				ADB1B10414ED2B28007E85C8 /* icon-iphone@2x.png */,
+				ADB1B10214ED2B23007E85C8 /* icon-iphone.png */,
 				ADB1B0DD14ECCF15007E85C8 /* images */,
 				ADB1B0CB14ECCCAA007E85C8 /* Image.html */,
 				ADB1B0F914ECEE0A007E85C8 /* Simple.html */,
