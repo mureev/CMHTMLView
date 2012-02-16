@@ -13,6 +13,7 @@ typedef void (^CompetitionBlock)(NSError* error);
 
 @property (assign) CGSize               maxSize;
 @property (readonly) UIScrollView*      scrollView;
+@property (retain) NSArray*             blockTags;
 
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;

@@ -7,7 +7,7 @@
 
 #import "CMHTMLView.h"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}}</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}} %@</style>"
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
@@ -20,7 +20,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, maxSize;
+@synthesize webView, competitionBlock, maxSize, blockTags;
 @dynamic scrollView;
 
 
@@ -56,6 +56,7 @@
     self.webView.delegate = nil;
     self.webView = nil;
     self.competitionBlock = nil;
+    self.blockTags = nil;
     
     [super dealloc];
 }
@@ -77,7 +78,14 @@
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
     
-    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18];
+    NSString* additionalStyle = @"";
+    if (self.blockTags) {
+        for (NSString* tag in self.blockTags) {
+            additionalStyle = [additionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
+        }
+    }
+    
+    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
     
     NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
     [self.webView loadHTMLString:body baseURL:nil];

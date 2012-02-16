@@ -17,6 +17,7 @@
     CMHTMLView* htmlView = [[[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
     htmlView.backgroundColor = [UIColor whiteColor];
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
     
     NSString* filePath = [[NSBundle mainBundle] pathForResource:@"Image" ofType:@"html"];  
     NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
