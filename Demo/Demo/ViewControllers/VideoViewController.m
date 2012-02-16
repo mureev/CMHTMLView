@@ -6,54 +6,41 @@
 //
 
 #import "VideoViewController.h"
+#import "CMHTMLView.h"
+
 
 @implementation VideoViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
+- (void)viewDidLoad {
+    [super viewDidLoad];    
+    CMHTMLView* htmlView = [[[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
+    htmlView.backgroundColor = [UIColor whiteColor];
+    htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    // Release any cached data, images, etc that aren't in use.
+    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"Video" ofType:@"html"];  
+    NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
+    NSString* htmlString = [[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding] autorelease];
+    
+    htmlView.alpha = 0;
+    
+    [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
+        if (!error) {
+            [UIView animateWithDuration:0.2 animations:^{
+                htmlView.alpha = 1;
+            }];
+        }
+    }];
+    
+    [self.view addSubview:htmlView];
 }
 
-#pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-*/
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    } else {
+        return YES;
+    }
 }
 
 @end

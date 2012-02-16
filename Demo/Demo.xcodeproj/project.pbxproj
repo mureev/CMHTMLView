@@ -32,6 +32,7 @@
 		ADB1B0FA14ECEE0A007E85C8 /* Simple.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0F914ECEE0A007E85C8 /* Simple.html */; };
 		ADB1B0FC14ECF0C3007E85C8 /* WarAndPeace.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */; };
 		ADB1B0FF14ECF375007E85C8 /* RotatingTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */; };
+		ADB1B10114ED0783007E85C8 /* Video.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10014ED0783007E85C8 /* Video.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = WarAndPeace.html; sourceTree = "<group>"; };
 		ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotatingTabBarController.h; path = Demo/RotatingTabBarController.h; sourceTree = SOURCE_ROOT; };
 		ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotatingTabBarController.m; path = Demo/RotatingTabBarController.m; sourceTree = SOURCE_ROOT; };
+		ADB1B10014ED0783007E85C8 /* Video.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Video.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				ADB1B0DD14ECCF15007E85C8 /* images */,
 				ADB1B0CB14ECCCAA007E85C8 /* Image.html */,
 				ADB1B0F914ECEE0A007E85C8 /* Simple.html */,
+				ADB1B10014ED0783007E85C8 /* Video.html */,
 				ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */,
 			);
 			path = Resources;
@@ -258,6 +261,7 @@
 				ADB1B0F114ECCF15007E85C8 /* video@2x.png in Resources */,
 				ADB1B0FA14ECEE0A007E85C8 /* Simple.html in Resources */,
 				ADB1B0FC14ECF0C3007E85C8 /* WarAndPeace.html in Resources */,
+				ADB1B10114ED0783007E85C8 /* Video.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,7 +7,7 @@
 
 #import "CMHTMLView.h"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { img {max-width : %.0fpx;} body {width : %.0fpx;} } @media (orientation: landscape) { img {max-width : %.0fpx;} body {width : %.0fpx;} }</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}}</style>"
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
@@ -37,7 +37,7 @@
         self.webView.delegate = self;
         self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.webView.scalesPageToFit = NO;
-        self.webView.allowsInlineMediaPlayback = NO;
+        self.webView.allowsInlineMediaPlayback = YES;
         self.webView.mediaPlaybackRequiresUserAction = NO;
         
         [CMHTMLView removeBackgroundFromWebView:self.webView];      
@@ -77,7 +77,7 @@
         self.maxSize = CGSizeMake(320, 480);
     }
     
-    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.width-20, self.maxSize.height-18, self.maxSize.height-20];
+    NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18];
     
     NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
     [self.webView loadHTMLString:body baseURL:nil];

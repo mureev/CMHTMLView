@@ -12,8 +12,6 @@
 @implementation TextAndImagesViewController
 
 
-#pragma mark - View lifecycle
-
 - (void)viewDidLoad {
     [super viewDidLoad];    
     CMHTMLView* htmlView = [[[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
