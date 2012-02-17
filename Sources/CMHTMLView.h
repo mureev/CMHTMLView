@@ -18,6 +18,8 @@ typedef NSString* (^ImagePathBlock)(NSString* url, SetImagePathBlock setImage);
 
 @property (assign) CGSize               maxSize;
 @property (retain) NSArray*             blockTags;
+@property (retain) NSString*            fontFamily;
+@property (assign) CGFloat              fontSize;
 
 @property (retain) NSString*            defaultImagePath;
 @property (retain) ImagePathBlock       imageLoading;

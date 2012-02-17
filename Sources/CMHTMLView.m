@@ -18,13 +18,14 @@
 @property (retain) NSString*            jsCode;
 @property (retain) NSArray*             images;
 
+- (void)setDefaultValues;
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
 
 @end
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, images, maxSize, blockTags, defaultImagePath, imageLoading;
+@synthesize webView, competitionBlock, jsCode, images, maxSize, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading;
 @dynamic scrollView;
 
 
@@ -47,11 +48,7 @@
         [CMHTMLView removeBackgroundFromWebView:self.webView];      
         [self addSubview:self.webView];
         
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-            self.maxSize = CGSizeMake(320, 480);
-        } else {
-            self.maxSize = CGSizeMake(768, 1024);
-        }
+        [self setDefaultValues];
     }
     return self;
 }
@@ -63,6 +60,7 @@
     self.jsCode = nil;
     self.images = nil;
     self.blockTags = nil;
+    self.fontFamily = nil;
     self.defaultImagePath = nil;
     self.imageLoading = nil;
     
@@ -129,7 +127,7 @@
         }
         
         // Create <head> for page
-        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, @"Helvetica", 14.0, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
+        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
         
         // Create full page code
         NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
@@ -142,6 +140,17 @@
 
 #pragma mark - Private
 
+
+- (void)setDefaultValues {
+    self.fontFamily = @"Helvetica";
+    self.fontSize = 14.0;
+        
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        self.maxSize = CGSizeMake(320, 480);
+    } else {
+        self.maxSize = CGSizeMake(768, 1024);
+    }
+}
 
 + (void)removeBackgroundFromWebView:(UIWebView*)webView {
     for (UIView* subView in [webView subviews]) {
