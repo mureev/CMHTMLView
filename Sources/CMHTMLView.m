@@ -7,26 +7,27 @@
 
 #import "CMHTMLView.h"
 
-#define kNativeShame                @"ormma"
+#define kNativeShame                @"native"
 
 #define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}} %@</style>"
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
-@property (retain) UIWebView*           webView;
-@property (copy) CompetitionBlock       competitionBlock;
-@property (retain) NSString*            jsCode;
-@property (retain) NSArray*             images;
+@property (retain) UIWebView*               webView;
+@property (copy) CompetitionBlock           competitionBlock;
+@property (retain) NSString*                jsCode;
+@property (retain) NSMutableDictionary*     imgHashes;
 
 - (void)setDefaultValues;
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
++ (NSString*)md5OfString:(NSString*)str;
 
 @end
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, images, maxSize, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading;
-@dynamic scrollView;
+@synthesize webView, competitionBlock, jsCode, imgHashes, maxSize, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading;
+@dynamic scrollView, images;
 
 
 #pragma mark - Memory Managment
@@ -48,6 +49,9 @@
         [CMHTMLView removeBackgroundFromWebView:self.webView];      
         [self addSubview:self.webView];
         
+        self.jsCode = [NSString string];
+        self.imgHashes = [NSMutableDictionary dictionary];
+        
         [self setDefaultValues];
     }
     return self;
@@ -58,7 +62,7 @@
     self.webView = nil;
     self.competitionBlock = nil;
     self.jsCode = nil;
-    self.images = nil;
+    self.imgHashes = nil;
     self.blockTags = nil;
     self.fontFamily = nil;
     self.defaultImagePath = nil;
@@ -81,6 +85,10 @@
     return nil;
 }
 
+- (NSArray*)images {
+    return [self.imgHashes allKeys];
+}
+
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
     
@@ -90,31 +98,45 @@
         // Find all img tags
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:0 error:NULL];
         NSArray *matchs = [regex matchesInString:html options:0 range:NSMakeRange(0, [html length])];
+        
+        NSUInteger rangeOffset = 0;
+        
         for (NSTextCheckingResult *match in matchs) {
             int captureIndex;
             for (captureIndex = 1; captureIndex < match.numberOfRanges; captureIndex++) {
                 NSRange range = [match rangeAtIndex:captureIndex];
                 NSString* src = [html substringWithRange:range];
-                NSLog(@"Found src '%@'", src);
+                NSString* hash = [CMHTMLView md5OfString:src];
+                [self.imgHashes setObject:hash forKey:src];
                 
-                self.images = [self.images arrayByAddingObject:src];
+                // Add uniq id to img tag
+                NSString* idHTML = [NSString stringWithFormat:@" id=\"%@\"", hash];
+                resultHTML = [resultHTML stringByReplacingCharactersInRange:NSMakeRange(range.location+range.length+1+rangeOffset,0) withString:idHTML];
                 
-                // Start loading image for src
-                if (self.imageLoading) {
-                    NSString* path = self.imageLoading(src, ^(NSString* path) {
-                        // reload image with js
-                    });
-                    
-                    // TODO: use ranges insted string replace                    
-                    if (path) {
-                        resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
-                    } else if (self.defaultImagePath) {
-                        resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
-                    }
-                }
+                rangeOffset += [idHTML length];
                 
-                // Add uniq name to img tag
                 // Add onClcik js - window.location='';
+                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imagetouchend?id=%@';}, false);", hash, kNativeShame, hash];
+            }
+        }
+        
+        // Start loading image for src
+        if (self.imageLoading) {
+            for (NSString* src in self.images) {
+                NSString* hash = [self.imgHashes objectForKey:src];
+                NSString* path = self.imageLoading(src, ^(NSString* path) {
+                    if (path && [path length] > 0) {
+                        // reload image with js
+                        NSString* js = [NSString stringWithFormat:@"document.getElementById('%@');obj.src ='%@';", hash, path];
+                        [self.webView stringByEvaluatingJavaScriptFromString:js];
+                    }
+                });
+                                  
+                if (path) {
+                    resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
+                } else if (self.defaultImagePath) {
+                    resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
+                }
             }
         }
         
@@ -130,7 +152,7 @@
         NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
         
         // Create full page code
-        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, html];
+        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, resultHTML];
         
         // Start loading
         [self.webView loadHTMLString:body baseURL:nil];
@@ -162,6 +184,18 @@
             }
         }
     }
+}
+
++ (NSString*)md5OfString:(NSString*)str {
+    const char *ptr = [str UTF8String];
+    unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(ptr, strlen(ptr), md5Buffer);
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) 
+        [output appendFormat:@"%02x",md5Buffer[i]];
+    
+    return output;
 }
 
 

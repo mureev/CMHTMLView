@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CommonCrypto/CommonDigest.h> // for MD5 hash
 
 typedef void (^CompetitionBlock)(NSError* error);
 typedef void (^SetImagePathBlock)(NSString* path);
