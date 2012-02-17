@@ -6,6 +6,8 @@
 //
 
 #import "AppDelegate.h"
+
+// add rotation to UITabBarViewController
 #import "RotatingTabBarController.h"
 
 #import "SimpleTextViewController.h"
@@ -35,7 +37,7 @@
     
     OfflineImagesViewController* offlineImagesViewController = [[OfflineImagesViewController new] autorelease];
     offlineImagesViewController.tabBarItem.image = [UIImage imageNamed:@"image.png"];
-    offlineImagesViewController.title = @"Images";
+    offlineImagesViewController.title = @"Offline Images";
     
     HugeTextViewController* hugeTextViewController = [[HugeTextViewController new] autorelease];
     hugeTextViewController.tabBarItem.image = [UIImage imageNamed:@"book.png"];

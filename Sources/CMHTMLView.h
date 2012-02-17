@@ -28,9 +28,9 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (assign) BOOL                 disableAHrefForImages;
 
 // Callbacks
-@property (retain) ImagePathBlock       imageLoading;
-@property (retain) ImageClickBlock      imageClick;
-@property (retain) UrlClickBlock        urlClick;
+@property (copy) ImagePathBlock         imageLoading;
+@property (copy) ImageClickBlock        imageClick;
+@property (copy) UrlClickBlock          urlClick;
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
 

@@ -7,17 +7,31 @@
 
 #import "OfflineImagesViewController.h"
 #import "CMHTMLView.h"
+#import "NetworkQueue.h"
+#import "ObjectStorage.h"
 
 
 @implementation OfflineImagesViewController
 
+- (NSString*)createWebPath:(NSString*) path {
+    path = [path stringByReplacingOccurrencesOfString:@"/" withString:@"//"];
+    path = [path stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+    path = [NSString stringWithFormat:@"file:/%@", path];
+    
+    //NSLog(@"path '%@'", path);
+    
+    return path;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];    
     CMHTMLView* htmlView = [[[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
     htmlView.backgroundColor = [UIColor whiteColor];
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
     htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
+    
+    htmlView.defaultImagePath = [self createWebPath:[[NSBundle mainBundle] pathForResource:@"pixel" ofType:@"png"]];
     
     NSString* filePath = [[NSBundle mainBundle] pathForResource:@"Image" ofType:@"html"];  
     NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
@@ -35,6 +49,21 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert show];
         [alert release];
+    };
+    
+    htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
+        if ([ObjectStorage isCached:url]) {
+            return [self createWebPath:[ObjectStorage pathForFileCache:url]];
+        } else {
+            [NetworkQueue loadWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]] completion:^(NSURLRequest *request, NSHTTPURLResponse *response, NSData *data, NSError *error) {
+                if (!error) {
+                    [ObjectStorage storeObject:data key:url];
+                    setImage([self createWebPath:[ObjectStorage pathForFileCache:url]]);
+                }
+            }];
+            
+            return @"";
+        }
     };
     
     [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
