@@ -26,7 +26,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, imgHashes, maxSize, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading;
+@synthesize webView, competitionBlock, jsCode, imgHashes, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading, imageTouch, urlClick;
 @dynamic scrollView, images;
 
 
@@ -67,6 +67,8 @@
     self.fontFamily = nil;
     self.defaultImagePath = nil;
     self.imageLoading = nil;
+    self.imageTouch = nil;
+    self.urlClick = nil;
     
     [super dealloc];
 }
@@ -116,7 +118,7 @@
                 rangeOffset += [idHTML length];
                 
                 // Add onClcik js - window.location='';
-                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imagetouchend?id=%@';}, false);", hash, kNativeShame, hash];
+                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imagetouchend?%@';}, false);", hash, kNativeShame, hash];
             }
         }
         
@@ -149,7 +151,7 @@
         }
         
         // Create <head> for page
-        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxSize.width-18, self.maxSize.height-18, additionalStyle];
+        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxWidthPortrait-18, self.maxWidthLandscape-18, additionalStyle];
         
         // Create full page code
         NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, resultHTML];
@@ -168,9 +170,11 @@
     self.fontSize = 14.0;
         
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.maxSize = CGSizeMake(320, 480);
+        self.maxWidthPortrait = 320;
+        self.maxWidthLandscape = 480;
     } else {
-        self.maxSize = CGSizeMake(768, 1024);
+        self.maxWidthPortrait = 768;
+        self.maxWidthLandscape = 1024;
     }
 }
 
@@ -203,13 +207,20 @@
 
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if ([[[request URL] scheme] isEqualToString:kNativeShame]) {
-        // working on native callback
+    NSURL* url = [request URL];
+    if ([[url scheme] isEqualToString:kNativeShame]) {
+        if ([[url host] isEqualToString:@"imagetouchend"]) {
+            if (self.imageTouch) {
+                self.imageTouch([url query]);
+            }
+        }
     } else {
-        if (navigationType == UIWebViewNavigationTypeOther && [[[request URL] absoluteString] isEqualToString:@"about:blank"]) {
+        if (navigationType == UIWebViewNavigationTypeOther && [[url absoluteString] isEqualToString:@"about:blank"]) {
             return YES;
-        } else {        
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"openURL" object:nil];
+        } else {
+            if (self.urlClick) {
+                self.urlClick([url absoluteString]);
+            }
         }
     }
     
