@@ -7,7 +7,7 @@
 
 #import "ObjectStorage.h"
 
-#define kCachePath @"objectStorageCache"
+#define kCachePath @"ObjectStorage"
 
 @interface ObjectStorage()
 

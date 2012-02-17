@@ -162,7 +162,7 @@
         NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, resultHTML];
         
         // Start loading
-        [self.webView loadHTMLString:body baseURL:nil];
+        [self.webView loadHTMLString:body baseURL:[NSURL URLWithString:@"about:blank"]];
     });
 }
 
