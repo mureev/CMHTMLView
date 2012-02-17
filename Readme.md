@@ -2,9 +2,9 @@
 
 **Simple, stable, powerfull rich content control (HTML) for iOS developers.**
 
-![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png "Text")
-![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png "Offline Images")
-![Translucent](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Translucent.png "Translucent")
+![Text](https://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true"Text")
+![OfflineImages](https://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Offline Images")
+![Translucent](https://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Translucent")
 
 # Features
 
