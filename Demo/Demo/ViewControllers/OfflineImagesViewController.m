@@ -8,7 +8,7 @@
 #import "OfflineImagesViewController.h"
 #import "CMHTMLView.h"
 #import "NetworkQueue.h"
-#import "ObjectStorage.h"
+#import "DataStorage.h"
 
 
 @implementation OfflineImagesViewController
@@ -51,13 +51,13 @@
     };
     
     htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
-        if ([ObjectStorage isCached:url]) {
-            return [self createWebPath:[ObjectStorage pathForFileCache:url]];
+        if ([DataStorage isCached:url]) {
+            return [self createWebPath:[DataStorage pathForFileCache:url]];
         } else {
             [NetworkQueue loadWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]] completion:^(NSURLRequest *request, NSHTTPURLResponse *response, NSData *data, NSError *error) {
                 if (!error) {
-                    [ObjectStorage storeObject:data key:url];
-                    setImage([self createWebPath:[ObjectStorage pathForFileCache:url]]);
+                    [DataStorage storeData:data key:url];
+                    setImage([self createWebPath:[DataStorage pathForFileCache:url]]);
                 }
             }];
             
