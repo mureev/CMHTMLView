@@ -22,23 +22,9 @@ static NSOperationQueue* get_network_operations_io_queue() {
 	return _networkIOQueue;
 }
 
-+ (NSMutableURLRequest*)addHeadersToRequest:(NSURLRequest*)request {
-    NSMutableURLRequest* mutableRequest = nil;
-    
-    if ([request isKindOfClass:[NSMutableURLRequest class]]) {
-        mutableRequest = (NSMutableURLRequest*)request;
-    } else {
-        mutableRequest = [NSMutableURLRequest requestWithURL:[request URL] cachePolicy:request.cachePolicy timeoutInterval:request.timeoutInterval];
-    }
-    
-    mutableRequest.timeoutInterval = 15;
-    
-    return mutableRequest;
-}
-
 + (CancellationBlock)loadWithURLRequest:(NSURLRequest *)urlRequest
                              completion:(void (^)(NSURLRequest *request, NSHTTPURLResponse *response, NSData *data, NSError *error))completion {
-    NSURLRequest* sendRequest = [self addHeadersToRequest:urlRequest];
+    NSURLRequest* sendRequest = urlRequest;
     AFHTTPRequestOperation* requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:sendRequest];
     
     CancellationBlock block = ^() {

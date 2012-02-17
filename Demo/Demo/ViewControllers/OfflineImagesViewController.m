@@ -61,7 +61,7 @@
                 }
             }];
             
-            return @"";
+            return nil;
         }
     };
     

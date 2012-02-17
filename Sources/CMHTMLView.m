@@ -129,14 +129,14 @@
                 NSString* path = self.imageLoading(src, ^(NSString* path) {
                     if (path && [path length] > 0) {
                         // reload image with js
-                        NSString* js = [NSString stringWithFormat:@"document.getElementById('%@');obj.src ='%@';", hash, path];
+                        NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
                         [self.webView stringByEvaluatingJavaScriptFromString:js];
                     }
                 });
                                   
                 if (path && [path length] > 0) {
                     resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
-                } else if (self.defaultImagePath) {
+                } else if (self.defaultImagePath) {                    
                     resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
                 }
             }

@@ -37,7 +37,7 @@
     
     OfflineImagesViewController* offlineImagesViewController = [[OfflineImagesViewController new] autorelease];
     offlineImagesViewController.tabBarItem.image = [UIImage imageNamed:@"image.png"];
-    offlineImagesViewController.title = @"Offline Images";
+    offlineImagesViewController.title = @"Images";
     
     HugeTextViewController* hugeTextViewController = [[HugeTextViewController new] autorelease];
     hugeTextViewController.tabBarItem.image = [UIImage imageNamed:@"book.png"];
