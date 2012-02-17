@@ -114,11 +114,11 @@ static dispatch_queue_t get_disk_io_queue() {
     key = [DataStorage cacheKeyForKey:key];
     
     // as file
-    dispatch_async(get_disk_io_queue(), ^{
+    //dispatch_async(get_disk_io_queue(), ^{
         [self createDiskCachePath];
         
         [data writeToFile:[self.diskCachePath stringByAppendingPathComponent:key] atomically:YES];
-    });
+    //});
 }
 
 
