@@ -16,7 +16,7 @@
 @property (retain) UIWebView*               webView;
 @property (copy) CompetitionBlock           competitionBlock;
 @property (retain) NSString*                jsCode;
-@property (retain) NSMutableDictionary*     imgHashes;
+@property (retain) NSMutableDictionary*     imgURLs;
 
 - (void)setDefaultValues;
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
@@ -26,7 +26,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, imgHashes, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, imageLoading, imageTouch, urlClick;
+@synthesize webView, competitionBlock, jsCode, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -50,7 +50,7 @@
         [self addSubview:self.webView];
         
         self.jsCode = [NSString string];
-        self.imgHashes = [NSMutableDictionary dictionary];
+        self.imgURLs = [NSMutableDictionary dictionary];
         
         [self setDefaultValues];
     }
@@ -62,12 +62,12 @@
     self.webView = nil;
     self.competitionBlock = nil;
     self.jsCode = nil;
-    self.imgHashes = nil;
+    self.imgURLs = nil;
     self.blockTags = nil;
     self.fontFamily = nil;
     self.defaultImagePath = nil;
     self.imageLoading = nil;
-    self.imageTouch = nil;
+    self.imageClick = nil;
     self.urlClick = nil;
     
     [super dealloc];
@@ -88,7 +88,7 @@
 }
 
 - (NSArray*)images {
-    return [self.imgHashes allKeys];
+    return [self.imgURLs allValues];
 }
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
@@ -109,7 +109,7 @@
                 NSRange range = [match rangeAtIndex:captureIndex];
                 NSString* src = [html substringWithRange:range];
                 NSString* hash = [CMHTMLView md5OfString:src];
-                [self.imgHashes setObject:hash forKey:src];
+                [self.imgURLs setObject:src forKey:hash];
                 
                 // Add uniq id to img tag
                 NSString* idHTML = [NSString stringWithFormat:@" id=\"%@\"", hash];
@@ -118,14 +118,14 @@
                 rangeOffset += [idHTML length];
                 
                 // Add onClcik js - window.location='';
-                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imagetouchend?%@';}, false);", hash, kNativeShame, hash];
+                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
             }
         }
         
         // Start loading image for src
         if (self.imageLoading) {
-            for (NSString* src in self.images) {
-                NSString* hash = [self.imgHashes objectForKey:src];
+            for (NSString* hash in [self.imgURLs allKeys]) {
+                NSString* src = [self.imgURLs objectForKey:hash];
                 NSString* path = self.imageLoading(src, ^(NSString* path) {
                     if (path && [path length] > 0) {
                         // reload image with js
@@ -150,6 +150,11 @@
             }
         }
         
+        // Disable <a href=""> for <img> tags
+        if (self.disableAHrefForImages) {
+            self.jsCode = [self.jsCode stringByAppendingString:@" var link, img, arr;arr = document.getElementsByTagName('img');for (i in arr) {img = arr[i];link = img.parentNode;if (link && link.tagName.toLowerCase() == 'a') {link.removeAttribute('href');}}"];
+        }
+        
         // Create <head> for page
         NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxWidthPortrait-18, self.maxWidthLandscape-18, additionalStyle];
         
@@ -166,6 +171,8 @@
 
 
 - (void)setDefaultValues {
+    self.disableAHrefForImages = YES;
+    
     self.fontFamily = @"Helvetica";
     self.fontSize = 14.0;
         
@@ -209,9 +216,9 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSURL* url = [request URL];
     if ([[url scheme] isEqualToString:kNativeShame]) {
-        if ([[url host] isEqualToString:@"imagetouchend"]) {
-            if (self.imageTouch) {
-                self.imageTouch([url query]);
+        if ([[url host] isEqualToString:@"imageclick"]) {
+            if (self.imageClick) {
+                self.imageClick([self.imgURLs objectForKey:[url query]]);
             }
         }
     } else {

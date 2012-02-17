@@ -25,6 +25,18 @@
     
     htmlView.alpha = 0;
     
+    htmlView.urlClick = ^(NSString* url) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    };
+    
+    htmlView.imageClick = ^(NSString* url) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    };
+    
     [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
         if (!error) {
             [UIView animateWithDuration:0.2 animations:^{

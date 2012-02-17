@@ -11,7 +11,7 @@
 typedef void (^CompetitionBlock)(NSError* error);
 typedef void (^SetImagePathBlock)(NSString* path);
 typedef NSString* (^ImagePathBlock)(NSString* url, SetImagePathBlock setImage);
-typedef void (^ImageTouchBlock)(NSString* url);
+typedef void (^ImageClickBlock)(NSString* url);
 typedef void (^UrlClickBlock)(NSString* url);
 
 @interface CMHTMLView : UIView
@@ -25,10 +25,11 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (retain) NSString*            fontFamily;
 @property (assign) CGFloat              fontSize;
 @property (retain) NSString*            defaultImagePath;
+@property (assign) BOOL                 disableAHrefForImages;
 
 // Callbacks
 @property (retain) ImagePathBlock       imageLoading;
-@property (retain) ImageTouchBlock      imageTouch;
+@property (retain) ImageClickBlock      imageClick;
 @property (retain) UrlClickBlock        urlClick;
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
