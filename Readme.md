@@ -4,7 +4,6 @@
 
 ![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Text")
 ![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png?raw=true "Offline Images")
-![Translucent](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Translucent.png?raw=true "Translucent")
 
 # Features
 
