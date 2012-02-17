@@ -15,7 +15,7 @@
 		ADB1B0CC14ECCCAA007E85C8 /* Image.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0CB14ECCCAA007E85C8 /* Image.html */; };
 		ADB1B0D814ECCCAE007E85C8 /* HugeTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0CF14ECCCAE007E85C8 /* HugeTextViewController.m */; };
 		ADB1B0D914ECCCAE007E85C8 /* SimpleTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D114ECCCAE007E85C8 /* SimpleTextViewController.m */; };
-		ADB1B0DA14ECCCAE007E85C8 /* TextAndImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D314ECCCAE007E85C8 /* TextAndImagesViewController.m */; };
+		ADB1B0DA14ECCCAE007E85C8 /* OfflineImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D314ECCCAE007E85C8 /* OfflineImagesViewController.m */; };
 		ADB1B0DB14ECCCAE007E85C8 /* TranslucentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D514ECCCAE007E85C8 /* TranslucentViewController.m */; };
 		ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D714ECCCAE007E85C8 /* VideoViewController.m */; };
 		ADB1B0E814ECCF15007E85C8 /* book.png in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0DE14ECCF15007E85C8 /* book.png */; };
@@ -53,8 +53,8 @@
 		ADB1B0CF14ECCCAE007E85C8 /* HugeTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HugeTextViewController.m; sourceTree = "<group>"; };
 		ADB1B0D014ECCCAE007E85C8 /* SimpleTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTextViewController.h; sourceTree = "<group>"; };
 		ADB1B0D114ECCCAE007E85C8 /* SimpleTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleTextViewController.m; sourceTree = "<group>"; };
-		ADB1B0D214ECCCAE007E85C8 /* TextAndImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextAndImagesViewController.h; sourceTree = "<group>"; };
-		ADB1B0D314ECCCAE007E85C8 /* TextAndImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextAndImagesViewController.m; sourceTree = "<group>"; };
+		ADB1B0D214ECCCAE007E85C8 /* OfflineImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OfflineImagesViewController.h; sourceTree = "<group>"; };
+		ADB1B0D314ECCCAE007E85C8 /* OfflineImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfflineImagesViewController.m; sourceTree = "<group>"; };
 		ADB1B0D414ECCCAE007E85C8 /* TranslucentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TranslucentViewController.h; sourceTree = "<group>"; };
 		ADB1B0D514ECCCAE007E85C8 /* TranslucentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TranslucentViewController.m; sourceTree = "<group>"; };
 		ADB1B0D614ECCCAE007E85C8 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
@@ -169,8 +169,8 @@
 				ADB1B0CF14ECCCAE007E85C8 /* HugeTextViewController.m */,
 				ADB1B0D014ECCCAE007E85C8 /* SimpleTextViewController.h */,
 				ADB1B0D114ECCCAE007E85C8 /* SimpleTextViewController.m */,
-				ADB1B0D214ECCCAE007E85C8 /* TextAndImagesViewController.h */,
-				ADB1B0D314ECCCAE007E85C8 /* TextAndImagesViewController.m */,
+				ADB1B0D214ECCCAE007E85C8 /* OfflineImagesViewController.h */,
+				ADB1B0D314ECCCAE007E85C8 /* OfflineImagesViewController.m */,
 				ADB1B0D414ECCCAE007E85C8 /* TranslucentViewController.h */,
 				ADB1B0D514ECCCAE007E85C8 /* TranslucentViewController.m */,
 				ADB1B0D614ECCCAE007E85C8 /* VideoViewController.h */,
@@ -288,7 +288,7 @@
 				AD4D9F5F14ECCBF400E0EB9F /* AppDelegate.m in Sources */,
 				ADB1B0D814ECCCAE007E85C8 /* HugeTextViewController.m in Sources */,
 				ADB1B0D914ECCCAE007E85C8 /* SimpleTextViewController.m in Sources */,
-				ADB1B0DA14ECCCAE007E85C8 /* TextAndImagesViewController.m in Sources */,
+				ADB1B0DA14ECCCAE007E85C8 /* OfflineImagesViewController.m in Sources */,
 				ADB1B0DB14ECCCAE007E85C8 /* TranslucentViewController.m in Sources */,
 				ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */,
 				ADB1B0F514ECD0BD007E85C8 /* CMHTMLView.m in Sources */,

@@ -1,15 +1,15 @@
 //
-//  SecondViewController.m
+//  OfflineImagesViewController.m
 //
 //  Created by Constantine Mureev on 16.02.12.
 //  Copyright (c) 2012 Team Force LLC. All rights reserved.
 //
 
-#import "TextAndImagesViewController.h"
+#import "OfflineImagesViewController.h"
 #import "CMHTMLView.h"
 
 
-@implementation TextAndImagesViewController
+@implementation OfflineImagesViewController
 
 
 - (void)viewDidLoad {

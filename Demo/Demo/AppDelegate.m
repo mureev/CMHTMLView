@@ -9,7 +9,7 @@
 #import "RotatingTabBarController.h"
 
 #import "SimpleTextViewController.h"
-#import "TextAndImagesViewController.h"
+#import "OfflineImagesViewController.h"
 #import "HugeTextViewController.h"
 #import "VideoViewController.h"
 #import "TranslucentViewController.h"
@@ -33,9 +33,9 @@
     simpleTextViewController.tabBarItem.image = [UIImage imageNamed:@"text.png"];
     simpleTextViewController.title = @"Simple";
     
-    TextAndImagesViewController* textAndImagesViewController = [[TextAndImagesViewController new] autorelease];
-    textAndImagesViewController.tabBarItem.image = [UIImage imageNamed:@"image.png"];
-    textAndImagesViewController.title = @"Images";
+    OfflineImagesViewController* offlineImagesViewController = [[OfflineImagesViewController new] autorelease];
+    offlineImagesViewController.tabBarItem.image = [UIImage imageNamed:@"image.png"];
+    offlineImagesViewController.title = @"Images";
     
     HugeTextViewController* hugeTextViewController = [[HugeTextViewController new] autorelease];
     hugeTextViewController.tabBarItem.image = [UIImage imageNamed:@"book.png"];
@@ -52,7 +52,7 @@
     navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         
     self.tabBarController = [[[RotatingTabBarController alloc] init] autorelease];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, textAndImagesViewController, hugeTextViewController, videoViewController, navController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, offlineImagesViewController, hugeTextViewController, videoViewController, navController, nil];
     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
