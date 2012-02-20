@@ -167,8 +167,8 @@
 }
 
 - (void)clean {
-    // fast cleaning web view
-    [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
+    // Fast cleaning web view
+    [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = '';"];
 }
 
 

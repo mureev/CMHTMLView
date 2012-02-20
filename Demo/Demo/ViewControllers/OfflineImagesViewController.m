@@ -13,11 +13,10 @@
 
 @implementation OfflineImagesViewController
 
+
 - (NSString*)createWebPath:(NSString*) path {
     path = [[NSURL fileURLWithPath:path isDirectory:NO] absoluteString];
     path = [path stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
-    NSLog(@"path '%@'", path);
     
     return path;
 }
