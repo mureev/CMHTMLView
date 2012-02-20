@@ -33,5 +33,6 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (copy) UrlClickBlock          urlClick;
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
+- (void)clean;
 
 @end

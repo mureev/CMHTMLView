@@ -166,6 +166,11 @@
     });
 }
 
+- (void)clean {
+    // fast cleaning web view
+    [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
+}
+
 
 #pragma mark - Private
 
