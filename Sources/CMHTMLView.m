@@ -224,7 +224,7 @@
     } else {
         if (navigationType == UIWebViewNavigationTypeOther && [[url absoluteString] isEqualToString:@"about:blank"]) {
             return YES;
-        } else {
+        } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.urlClick) {
                 self.urlClick([url absoluteString]);
             }
