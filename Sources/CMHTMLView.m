@@ -96,6 +96,7 @@
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
+    [self clean];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* resultHTML = html;
@@ -171,6 +172,9 @@
 }
 
 - (void)clean {
+    [self.imgURLs removeAllObjects];
+    [self.imgURLforHash removeAllObjects];
+    
     // fast cleaning web view
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
 }
