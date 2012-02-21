@@ -16,7 +16,8 @@
 @property (retain) UIWebView*               webView;
 @property (copy) CompetitionBlock           competitionBlock;
 @property (retain) NSString*                jsCode;
-@property (retain) NSMutableDictionary*     imgURLs;
+@property (retain) NSMutableDictionary*     imgURLforHash;
+@property (retain) NSMutableArray*          imgURLs;
 
 - (void)setDefaultValues;
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
@@ -26,7 +27,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
+@synthesize webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -50,7 +51,8 @@
         [self addSubview:self.webView];
         
         self.jsCode = [NSString string];
-        self.imgURLs = [NSMutableDictionary dictionary];
+        self.imgURLforHash = [NSMutableDictionary dictionary];
+        self.imgURLs = [NSMutableArray array];
         
         [self setDefaultValues];
     }
@@ -62,6 +64,7 @@
     self.webView = nil;
     self.competitionBlock = nil;
     self.jsCode = nil;
+    self.imgURLforHash = nil;
     self.imgURLs = nil;
     self.blockTags = nil;
     self.fontFamily = nil;
@@ -88,7 +91,7 @@
 }
 
 - (NSArray*)images {
-    return [self.imgURLs allValues];
+    return [NSArray arrayWithArray:self.imgURLs];
 }
 
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
@@ -109,7 +112,8 @@
                 NSRange range = [match rangeAtIndex:captureIndex];
                 NSString* src = [html substringWithRange:range];
                 NSString* hash = [CMHTMLView md5OfString:src];
-                [self.imgURLs setObject:src forKey:hash];
+                [self.imgURLforHash setObject:src forKey:hash];
+                [self.imgURLs addObject:src];
                 
                 // Add uniq id to img tag
                 NSString* idHTML = [NSString stringWithFormat:@" id=\"%@\"", hash];
@@ -124,8 +128,8 @@
         
         // Start loading image for src
         if (self.imageLoading) {
-            for (NSString* hash in [self.imgURLs allKeys]) {
-                NSString* src = [self.imgURLs objectForKey:hash];
+            for (NSString* hash in [self.imgURLforHash allKeys]) {
+                NSString* src = [self.imgURLforHash objectForKey:hash];
                 NSString* path = self.imageLoading(src, ^(NSString* path) {
                     if (path && [path length] > 0) {
                         // reload image with js
@@ -167,8 +171,8 @@
 }
 
 - (void)clean {
-    // Fast cleaning web view
-    [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = '';"];
+    // fast cleaning web view
+    [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
 }
 
 
@@ -223,7 +227,7 @@
     if ([[url scheme] isEqualToString:kNativeShame]) {
         if ([[url host] isEqualToString:@"imageclick"]) {
             if (self.imageClick) {
-                self.imageClick([self.imgURLs objectForKey:[url query]]);
+                self.imageClick([self.imgURLforHash objectForKey:[url query]]);
             }
         }
     } else {
