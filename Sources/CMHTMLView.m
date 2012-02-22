@@ -172,6 +172,7 @@
 }
 
 - (void)clean {
+    self.jsCode = [NSString string];
     [self.imgURLs removeAllObjects];
     [self.imgURLforHash removeAllObjects];
     
