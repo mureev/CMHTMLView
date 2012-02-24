@@ -236,12 +236,12 @@
             }
         }
     } else {
-        if (navigationType == UIWebViewNavigationTypeOther && [[url absoluteString] isEqualToString:@"about:blank"]) {
-            return YES;
-        } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.urlClick) {
                 self.urlClick([url absoluteString]);
             }
+        } else if (navigationType == UIWebViewNavigationTypeOther) {
+            return YES;
         }
     }
     
