@@ -20,6 +20,7 @@
 @property (retain) NSMutableArray*          imgURLs;
 
 - (void)setDefaultValues;
++ (NSString*)getSystemFont;
 + (void)removeBackgroundFromWebView:(UIWebView*)webView;
 + (NSString*)md5OfString:(NSString*)str;
 
@@ -34,8 +35,7 @@
 #pragma mark - Memory Managment
 
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] autorelease];
@@ -138,7 +138,7 @@
                         [self.webView stringByEvaluatingJavaScriptFromString:js];
                     }
                 });
-                                  
+                
                 if (path && [path length] > 0) {
                     resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
                 } else if (self.defaultImagePath) {                    
@@ -187,9 +187,9 @@
 - (void)setDefaultValues {
     self.disableAHrefForImages = YES;
     
-    self.fontFamily = @"Helvetica";
+    self.fontFamily = [CMHTMLView getSystemFont];
     self.fontSize = 14.0;
-        
+    
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.maxWidthPortrait = 320;
         self.maxWidthLandscape = 480;
@@ -197,6 +197,18 @@
         self.maxWidthPortrait = 768;
         self.maxWidthLandscape = 1024;
     }
+}
+
++ (NSString*)getSystemFont {
+    static dispatch_once_t onceToken;
+    static NSString* font;
+    
+    dispatch_once(&onceToken, ^{
+        //get system default font 
+        font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
+    });
+    
+    return font;
 }
 
 + (void)removeBackgroundFromWebView:(UIWebView*)webView {
