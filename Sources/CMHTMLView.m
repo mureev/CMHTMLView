@@ -132,10 +132,12 @@
             for (NSString* hash in [self.imgURLforHash allKeys]) {
                 NSString* src = [self.imgURLforHash objectForKey:hash];
                 NSString* path = self.imageLoading(src, ^(NSString* path) {
-                    if (path && [path length] > 0) {
-                        // reload image with js
-                        NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
-                        [self.webView stringByEvaluatingJavaScriptFromString:js];
+                    if (path && [path length] > 0) {                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            // reload image with js
+                            NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
+                            [self.webView stringByEvaluatingJavaScriptFromString:js];
+                        });
                     }
                 });
                 

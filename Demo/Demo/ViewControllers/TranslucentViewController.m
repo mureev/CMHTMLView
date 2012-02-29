@@ -8,7 +8,7 @@
 #import "TranslucentViewController.h"
 #import "CMHTMLView.h"
 #import "NetworkQueue.h"
-#import "DataStorage.h"
+#import "CMDataStorage.h"
 
 
 @implementation TranslucentViewController
@@ -53,13 +53,14 @@
     };
     
     htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
-        if ([DataStorage isCached:url]) {
-            return [self createWebPath:[DataStorage pathForFileCache:url]];
+        if ([CMDataStorage isCached:url]) {
+            return [self createWebPath:[CMDataStorage pathForDataFile:url]];
         } else {
             [NetworkQueue loadWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]] completion:^(NSURLRequest *request, NSHTTPURLResponse *response, NSData *data, NSError *error) {
                 if (!error) {
-                    [DataStorage storeData:data key:url];
-                    setImage([self createWebPath:[DataStorage pathForFileCache:url]]);
+                    [CMDataStorage storeData:data key:url block:^{
+                        setImage([self createWebPath:[CMDataStorage pathForDataFile:url]]);
+                    }];
                 }
             }];
             
