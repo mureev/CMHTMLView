@@ -9,7 +9,7 @@
 
 #define kNativeShame                @"native"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word;} img,video,iframe {margin:5px 0 5px 0;} * {height: auto;} @media (orientation: portrait) { * {max-width : %.0fpx;}} @media (orientation: landscape) { * {max-width : %.0fpx;}} %@</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} img,video,iframe {margin:5px 0 5px 0;} * {height:auto;} @media (orientation:portrait) { * {max-width:%.0fpx;}} @media (orientation:landscape) { * {max-width:%.0fpx;}} %@</style>"
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
@@ -180,6 +180,10 @@
     
     // fast cleaning web view
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
+}
+
+- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script {
+    return [self.webView stringByEvaluatingJavaScriptFromString:script];
 }
 
 

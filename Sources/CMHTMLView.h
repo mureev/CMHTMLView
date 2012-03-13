@@ -35,4 +35,7 @@ typedef void (^UrlClickBlock)(NSString* url);
 - (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
 - (void)clean;
 
+// JS API
+- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script;
+
 @end
