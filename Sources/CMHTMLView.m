@@ -254,12 +254,17 @@
             }
         }
     } else {
-        if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        if ([[url absoluteString] isEqualToString:@"about:blank"]) {
+            return YES;
+        } else if ([[url host] isEqualToString:@"www.youtube.com"]) {
+            return YES;
+        } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.urlClick) {
                 self.urlClick([url absoluteString]);
             }
         } else if (navigationType == UIWebViewNavigationTypeOther) {
-            return YES;
+            NSLog(@"Deny load url from UIWebView - %@", [url absoluteString]);
+            return NO;
         }
     }
     
