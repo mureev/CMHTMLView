@@ -9,10 +9,12 @@
 
 #define kNativeShame                @"native"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:9px; font-family:\"%@\"; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} img,video,iframe {margin:5px 0 5px 0;} * {height:auto;} @media (orientation:portrait) { * {max-width:%.0fpx;}} @media (orientation:landscape) { * {max-width:%.0fpx;}} %@</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:10px 0; font-family:%@; text-align:left; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} header {line-height:1.0;} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}</style>"
+
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
+@property (assign) BOOL                     loaded;
 @property (retain) UIWebView*               webView;
 @property (copy) CompetitionBlock           competitionBlock;
 @property (retain) NSString*                jsCode;
@@ -28,7 +30,7 @@
 
 @implementation CMHTMLView
 
-@synthesize webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
+@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -94,7 +96,7 @@
     return [NSArray arrayWithArray:self.imgURLs];
 }
 
-- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {    
     self.competitionBlock = competition;
     [self clean];
     
@@ -143,8 +145,11 @@
                 
                 if (path && [path length] > 0) {
                     resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
-                } else if (self.defaultImagePath) {                    
+                } else if (self.defaultImagePath) {
                     resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
+                } else {
+                    NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                    self.jsCode = [self.jsCode stringByAppendingString:js];
                 }
             }
         }
@@ -169,11 +174,14 @@
         NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, resultHTML];
         
         // Start loading
-        [self.webView loadHTMLString:body baseURL:nil];
+        NSString *path = [[NSBundle mainBundle] bundlePath];
+        NSURL *baseURL = [NSURL fileURLWithPath:path];
+        [self.webView loadHTMLString:body baseURL:baseURL];
     });
 }
 
 - (void)clean {
+    self.loaded = NO;
     self.jsCode = [NSString string];
     [self.imgURLs removeAllObjects];
     [self.imgURLforHash removeAllObjects];
@@ -196,7 +204,7 @@
     self.fontFamily = [CMHTMLView getSystemFont];
     self.fontSize = 14.0;
     
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         self.maxWidthPortrait = 320;
         self.maxWidthLandscape = 480;
     } else {
@@ -252,9 +260,15 @@
             if (self.imageClick) {
                 self.imageClick([self.imgURLforHash objectForKey:[url query]]);
             }
+        } else if ([[url host] isEqualToString:@"imagegallery"]) {
+            if (self.imageClick) {
+                self.imageClick([self.imgURLs lastObject]);
+            }
         }
     } else {
         if ([[url absoluteString] isEqualToString:@"about:blank"]) {
+            return YES;
+        } else if ([[url scheme] isEqualToString:@"file"]) {
             return YES;
         } else if ([[url host] isEqualToString:@"www.youtube.com"]) {
             return YES;
@@ -275,6 +289,8 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    self.loaded = YES;
+    
     if (self.jsCode) {
         [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];
     }
