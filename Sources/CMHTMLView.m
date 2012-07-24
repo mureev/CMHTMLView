@@ -13,7 +13,7 @@
 
 #define kDefaultDocumentHtmlStyle   @"html {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-user-select:none; -webkit-text-size-adjust:none; word-wrap:break-word;}"
 
-#define kDefaultDocumentBodyStyle   @"body {margin:0; padding:10px 10px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;}"
+#define kDefaultDocumentBodyStyle   @"body {margin:0; padding:5px 9px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;}"
 
 #define kDefaultDocumentRotateStyle @"@media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}"
 
