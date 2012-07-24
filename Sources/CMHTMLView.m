@@ -31,6 +31,7 @@
 - (NSString *)prepareImagesInHtml:(NSString *)html;
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html;
 - (NSString *)removeTag:(NSString *)tag html:(NSString *)html;
+- (NSString *)extendYouTubeSupportInHtml:(NSString *)html;
 
 + (NSString *)getSystemFont;
 + (void)removeBackgroundFromWebView:(UIWebView *)webView;
@@ -114,6 +115,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* loadHTML = [self prepareImagesInHtml:html];
         loadHTML = [self loadImagesBasedOnHtml:loadHTML];
+        loadHTML = [self extendYouTubeSupportInHtml:loadHTML];
         
         // Add blocking some HTML tags
         NSString* additionalStyle = @"";
@@ -258,6 +260,33 @@
     
     return html;
 }
+
+- (NSString *)extendYouTubeSupportInHtml:(NSString *)html {
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *youtubeEmbedRegex;
+    dispatch_once(&onceToken, ^{
+        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*object.*src.*/v/(.*?)['|\"].*object>" options:NSRegularExpressionCaseInsensitive error:nil];
+    });
+    
+    NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {    
+        NSRange objectRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
+        NSRange idRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
+        NSString* youtubrId = [html substringWithRange:idRange];
+        
+        // Add uniq id to img tag
+        NSString* iframe = [NSString stringWithFormat:@"<iframe src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\" allowfullscreen></iframe>", youtubrId];
+        html = [html stringByReplacingCharactersInRange:objectRange withString:iframe];
+        
+        rangeOffset += iframe.length - objectRange.length;
+    }
+    
+    return html;
+}
+
+//
 
 + (NSString*)getSystemFont {
     static dispatch_once_t onceToken;
