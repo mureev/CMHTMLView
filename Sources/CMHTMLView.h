@@ -22,6 +22,7 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (assign) CGFloat              maxWidthPortrait;
 @property (assign) CGFloat              maxWidthLandscape;
 @property (retain) NSArray*             blockTags;
+@property (retain) NSArray*             removeTags;
 @property (retain) NSString*            fontFamily;
 @property (assign) CGFloat              fontSize;
 @property (assign) CGFloat              lineHeight;

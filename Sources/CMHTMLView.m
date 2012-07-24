@@ -24,6 +24,7 @@
 - (void)setDefaultValues;
 - (NSString *)prepareImagesInHtml:(NSString *)html;
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html;
+- (NSString *)removeTag:(NSString *)tag html:(NSString *)html;
 
 + (NSString *)getSystemFont;
 + (void)removeBackgroundFromWebView:(UIWebView *)webView;
@@ -33,7 +34,7 @@
 
 @implementation CMHTMLView
 
-@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, lineHeight, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
+@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, removeTags, fontFamily, fontSize, lineHeight, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -72,6 +73,7 @@
     self.imgURLforHash = nil;
     self.imgURLs = nil;
     self.blockTags = nil;
+    self.removeTags = nil;
     self.fontFamily = nil;
     self.defaultImagePath = nil;
     self.imageLoading = nil;
@@ -105,13 +107,20 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* loadHTML = [self prepareImagesInHtml:html];
-        loadHTML = [self loadImagesBasedOnHtml:html];
+        loadHTML = [self loadImagesBasedOnHtml:loadHTML];
         
         // Add blocking some HTML tags
         NSString* additionalStyle = @"";
         if (self.blockTags) {
             for (NSString* tag in self.blockTags) {
                 additionalStyle = [additionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
+            }
+        }
+        
+        // Remove some HTML tags
+        if (self.removeTags) {
+            for (NSString* tag in self.removeTags) {
+                loadHTML = [self removeTag:tag html:loadHTML];
             }
         }
         
@@ -167,7 +176,7 @@
     }
 }
 
-- (NSString *)prepareImagesInHtml:(NSString *)html {    
+- (NSString *)prepareImagesInHtml:(NSString *)html {
     static dispatch_once_t onceToken;
     static NSRegularExpression *imgRegex;
     dispatch_once(&onceToken, ^{
@@ -221,6 +230,23 @@
                 self.jsCode = [self.jsCode stringByAppendingString:js];
             }
         }
+    }
+    
+    return html;
+}
+
+- (NSString *)removeTag:(NSString *)tag html:(NSString *)html {
+    NSString* pattern = [NSString stringWithFormat:@"<\\s*/?\\s*%@[^>]*>", tag];
+    NSRegularExpression *removeTagExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {    
+        NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
+        html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
+        
+        rangeOffset -= tagRange.length;
     }
     
     return html;

@@ -28,6 +28,7 @@
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
+    htmlView.removeTags = [NSArray arrayWithObjects:@"div", nil];
     
     htmlView.defaultImagePath = [self createWebPath:[[NSBundle mainBundle] pathForResource:@"pixel" ofType:@"png"]];
     
