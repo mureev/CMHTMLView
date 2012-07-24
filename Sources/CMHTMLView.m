@@ -9,7 +9,13 @@
 
 #define kNativeShame                @"native"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">html {-webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-user-select: none;} body {margin:0; padding:10px 0; font-family:%@; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}} %@</style>"
+#define kDefaultDocumentMeta        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/>"
+
+#define kDefaultDocumentHtmlStyle   @"html {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-user-select:none; -webkit-text-size-adjust:none; word-wrap:break-word;}"
+
+#define kDefaultDocumentBodyStyle   @"body {margin:0; padding:10px 10px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;}"
+
+#define kDefaultDocumentRotateStyle @"@media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}"
 
 
 @interface CMHTMLView() <UIWebViewDelegate>
@@ -130,10 +136,11 @@
         }
         
         // Create <head> for page
-        NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxWidthPortrait-18, self.maxWidthLandscape-18, additionalStyle];
+        NSString* bodyStyle = [NSString stringWithFormat:kDefaultDocumentBodyStyle, self.fontFamily, self.fontSize, self.lineHeight];
+        NSString* rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait-18, self.maxWidthLandscape-18];
         
         // Create full page code
-        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, loadHTML];
+        NSString* body = [NSString stringWithFormat:@"<html><head>%@<style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, additionalStyle, loadHTML];
         
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -201,7 +208,7 @@
         rangeOffset += img.length - imgRange.length;
         
         // Add onClcik js - window.location='';
-        self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
+        self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
     }
     
     return html;
@@ -258,7 +265,9 @@
     
     dispatch_once(&onceToken, ^{
         //get system default font 
-        font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
+        //font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
+        
+        font = @"'HelveticaNeue-Light', 'HelveticaNeue'";
     });
     
     return font;
