@@ -9,7 +9,7 @@
 
 #define kNativeShame                @"native"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:10px 0; font-family:%@; text-align:left; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} header {line-height:1.0;} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:10px 0; font-family:%@; text-align:left; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}} %@</style>"
 
 
 @interface CMHTMLView() <UIWebViewDelegate>
@@ -22,15 +22,18 @@
 @property (retain) NSMutableArray*          imgURLs;
 
 - (void)setDefaultValues;
-+ (NSString*)getSystemFont;
-+ (void)removeBackgroundFromWebView:(UIWebView*)webView;
-+ (NSString*)md5OfString:(NSString*)str;
+- (NSString *)prepareImagesInHtml:(NSString *)html;
+- (NSString *)loadImagesBasedOnHtml:(NSString *)html;
+
++ (NSString *)getSystemFont;
++ (void)removeBackgroundFromWebView:(UIWebView *)webView;
++ (NSString *)md5OfString:(NSString *)str;
 
 @end
 
 @implementation CMHTMLView
 
-@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
+@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, fontFamily, fontSize, lineHeight, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -101,58 +104,8 @@
     [self clean];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString* resultHTML = html;
-        
-        // Find all img tags
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:0 error:NULL];
-        NSArray *matchs = [regex matchesInString:html options:0 range:NSMakeRange(0, [html length])];
-        
-        NSUInteger rangeOffset = 0;
-        
-        for (NSTextCheckingResult *match in matchs) {
-            int captureIndex;
-            for (captureIndex = 1; captureIndex < match.numberOfRanges; captureIndex++) {
-                NSRange range = [match rangeAtIndex:captureIndex];
-                NSString* src = [html substringWithRange:range];
-                NSString* hash = [CMHTMLView md5OfString:src];
-                [self.imgURLforHash setObject:src forKey:hash];
-                [self.imgURLs addObject:src];
-                
-                // Add uniq id to img tag
-                NSString* idHTML = [NSString stringWithFormat:@" id=\"%@\"", hash];
-                resultHTML = [resultHTML stringByReplacingCharactersInRange:NSMakeRange(range.location+range.length+1+rangeOffset,0) withString:idHTML];
-                
-                rangeOffset += [idHTML length];
-                
-                // Add onClcik js - window.location='';
-                self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
-            }
-        }
-        
-        // Start loading image for src
-        if (self.imageLoading) {
-            for (NSString* hash in [self.imgURLforHash allKeys]) {
-                NSString* src = [self.imgURLforHash objectForKey:hash];
-                NSString* path = self.imageLoading(src, ^(NSString* path) {
-                    if (path && [path length] > 0) {                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            // reload image with js
-                            NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
-                            [self.webView stringByEvaluatingJavaScriptFromString:js];
-                        });
-                    }
-                });
-                
-                if (path && [path length] > 0) {
-                    resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:path];
-                } else if (self.defaultImagePath) {
-                    resultHTML = [resultHTML stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
-                } else {
-                    NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
-                    self.jsCode = [self.jsCode stringByAppendingString:js];
-                }
-            }
-        }
+        NSString* loadHTML = [self prepareImagesInHtml:html];
+        loadHTML = [self loadImagesBasedOnHtml:html];
         
         // Add blocking some HTML tags
         NSString* additionalStyle = @"";
@@ -171,7 +124,7 @@
         NSString* head = [NSString stringWithFormat:kDefaultDocumentHead, self.fontFamily, self.fontSize, self.maxWidthPortrait-18, self.maxWidthLandscape-18, additionalStyle];
         
         // Create full page code
-        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, resultHTML];
+        NSString* body = [NSString stringWithFormat:@"<html><head>%@</head><body>%@</body></html>", head, loadHTML];
         
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -203,6 +156,7 @@
     
     self.fontFamily = [CMHTMLView getSystemFont];
     self.fontSize = 14.0;
+    self.lineHeight = 1.4;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         self.maxWidthPortrait = 320;
@@ -211,6 +165,65 @@
         self.maxWidthPortrait = 768;
         self.maxWidthLandscape = 1024;
     }
+}
+
+- (NSString *)prepareImagesInHtml:(NSString *)html {    
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *imgRegex;
+    dispatch_once(&onceToken, ^{
+        imgRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:0 error:nil];
+    });
+    
+    NSArray *matchs = [imgRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {    
+        NSRange imgRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
+        NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
+        NSString* src = [html substringWithRange:srcRange];
+        NSString* hash = [CMHTMLView md5OfString:src];
+        [self.imgURLforHash setObject:src forKey:hash];
+        [self.imgURLs addObject:src];
+        
+        // Add uniq id to img tag
+        NSString* img = [NSString stringWithFormat:@"<img id=\"%@\" src=\"%@\"/>", hash, src];
+        html = [html stringByReplacingCharactersInRange:imgRange withString:img];
+        
+        rangeOffset += img.length - imgRange.length;
+        
+        // Add onClcik js - window.location='';
+        self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
+    }
+    
+    return html;
+}
+
+- (NSString *)loadImagesBasedOnHtml:(NSString *)html {
+    if (self.imageLoading) {
+        for (NSString* hash in [self.imgURLforHash allKeys]) {
+            NSString* src = [self.imgURLforHash objectForKey:hash];
+            NSString* path = self.imageLoading(src, ^(NSString* path) {
+                if (path && [path length] > 0) {                        
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // reload image with js
+                        NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
+                        [self.webView stringByEvaluatingJavaScriptFromString:js];
+                    });
+                }
+            });
+            
+            if (path && [path length] > 0) {
+                html = [html stringByReplacingOccurrencesOfString:src withString:path];
+            } else if (self.defaultImagePath) {
+                html = [html stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
+            } else {
+                NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                self.jsCode = [self.jsCode stringByAppendingString:js];
+            }
+        }
+    }
+    
+    return html;
 }
 
 + (NSString*)getSystemFont {
@@ -259,10 +272,6 @@
         if ([[url host] isEqualToString:@"imageclick"]) {
             if (self.imageClick) {
                 self.imageClick([self.imgURLforHash objectForKey:[url query]]);
-            }
-        } else if ([[url host] isEqualToString:@"imagegallery"]) {
-            if (self.imageClick) {
-                self.imageClick([self.imgURLs lastObject]);
             }
         }
     } else {

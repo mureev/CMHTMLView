@@ -24,6 +24,7 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (retain) NSArray*             blockTags;
 @property (retain) NSString*            fontFamily;
 @property (assign) CGFloat              fontSize;
+@property (assign) CGFloat              lineHeight;
 @property (retain) NSString*            defaultImagePath;
 @property (assign) BOOL                 disableAHrefForImages;
 
