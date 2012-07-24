@@ -316,6 +316,8 @@
             return YES;
         } else if ([[url host] isEqualToString:@"www.youtube.com"]) {
             return YES;
+        } else if ([[url host] isEqualToString:@"player.vimeo.com"]) {
+            return YES;
         } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.urlClick) {
                 self.urlClick([url absoluteString]);
