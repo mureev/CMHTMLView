@@ -9,7 +9,7 @@
 
 #define kNativeShame                @"native"
 
-#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">body {margin:0; padding:10px 0; font-family:%@; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}} %@</style>"
+#define kDefaultDocumentHead        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><style type=\"text/css\">html {-webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-user-select: none;} body {margin:0; padding:10px 0; font-family:%@; text-justify:newspaper; font-size:%f; word-wrap:break-word; -webkit-text-size-adjust:none;} a:link {color: #3A75C4; text-decoration: underline;} img,video {display:block; padding:5px 0; margin:0 auto;} content {line-height:1.4;} h1,h2,h3,h4,h5 {text-align:left} @media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}} %@</style>"
 
 
 @interface CMHTMLView() <UIWebViewDelegate>
@@ -201,7 +201,7 @@
         rangeOffset += img.length - imgRange.length;
         
         // Add onClcik js - window.location='';
-        self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
+        self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('touchend', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
     }
     
     return html;
