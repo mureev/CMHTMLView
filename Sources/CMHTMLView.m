@@ -13,7 +13,7 @@
 
 #define kDefaultDocumentHtmlStyle   @"html {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-user-select:none; -webkit-text-size-adjust:none; word-wrap:break-word;}"
 
-#define kDefaultDocumentBodyStyle   @"body {margin:0; padding:5px 9px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;}"
+#define kDefaultDocumentBodyStyle   @"body {margin:0; padding:10px 9px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;} table {font-size:10px;}"
 
 #define kDefaultDocumentRotateStyle @"@media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}"
 
@@ -29,6 +29,7 @@
 
 - (void)setDefaultValues;
 - (NSString *)prepareImagesInHtml:(NSString *)html;
+- (NSString *)simplifyTablesInHtml:(NSString *)html;
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html;
 - (NSString *)removeTag:(NSString *)tag html:(NSString *)html;
 - (NSString *)extendYouTubeSupportInHtml:(NSString *)html;
@@ -115,6 +116,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString* loadHTML = [self prepareImagesInHtml:html];
         loadHTML = [self loadImagesBasedOnHtml:loadHTML];
+        loadHTML = [self simplifyTablesInHtml:loadHTML];
         loadHTML = [self extendYouTubeSupportInHtml:loadHTML];
         
         // Add blocking some HTML tags
@@ -189,7 +191,7 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *imgRegex;
     dispatch_once(&onceToken, ^{
-        imgRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:0 error:nil];
+        imgRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     
     NSArray *matchs = [imgRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
@@ -211,6 +213,27 @@
         
         // Add onClcik js - window.location='';
         self.jsCode = [self.jsCode stringByAppendingFormat:@"document.getElementById('%@').addEventListener('click', function(event) {window.location='%@://imageclick?%@';}, false);", hash, kNativeShame, hash];
+    }
+    
+    return html;
+}
+
+- (NSString *)simplifyTablesInHtml:(NSString *)html {
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *tableRegex;
+    dispatch_once(&onceToken, ^{
+        tableRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*table.*width(.?)['|\"].*>" options:NSRegularExpressionCaseInsensitive error:nil];
+    });
+    
+    NSArray *matchs = [tableRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {    
+        NSRange widthRange = NSMakeRange([match rangeAtIndex:1].location - 5 + rangeOffset, [match rangeAtIndex:1].length);
+        
+        html = [html stringByReplacingCharactersInRange:widthRange withString:@""];
+        
+        rangeOffset -= widthRange.length;
     }
     
     return html;
@@ -347,6 +370,9 @@
             return YES;
         } else if ([[url host] isEqualToString:@"player.vimeo.com"]) {
             return YES;
+        } else if ([url.absoluteString rangeOfString:@"src=http://www.youtube"].location != NSNotFound) {
+            //http://reader.googleusercontent.com/reader/embediframe?src=http://www.youtube.com/v/4OD770n60cA?version%3D3%26hl%3Dpt_BR&width=640&height=360
+            return NO;
         } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.urlClick) {
                 self.urlClick([url absoluteString]);
