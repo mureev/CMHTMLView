@@ -30,9 +30,11 @@
 - (void)setDefaultValues;
 - (NSString *)prepareImagesInHtml:(NSString *)html;
 - (NSString *)simplifyTablesInHtml:(NSString *)html;
+- (NSString *)removeExtraLineBreaksInHtml:(NSString *)html;
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html;
 - (NSString *)removeTag:(NSString *)tag html:(NSString *)html;
 - (NSString *)extendYouTubeSupportInHtml:(NSString *)html;
+- (NSString *)disableIFrameForNonSupportedSrcInHtml:(NSString *)html;
 
 + (NSString *)getSystemFont;
 + (void)removeBackgroundFromWebView:(UIWebView *)webView;
@@ -117,7 +119,9 @@
         NSString* loadHTML = [self prepareImagesInHtml:html];
         loadHTML = [self loadImagesBasedOnHtml:loadHTML];
         loadHTML = [self simplifyTablesInHtml:loadHTML];
+        loadHTML = [self removeExtraLineBreaksInHtml:loadHTML];
         loadHTML = [self extendYouTubeSupportInHtml:loadHTML];
+        loadHTML = [self disableIFrameForNonSupportedSrcInHtml:loadHTML];
         
         // Add blocking some HTML tags
         NSString* additionalStyle = @"";
@@ -239,17 +243,42 @@
     return html;
 }
 
+- (NSString *)removeExtraLineBreaksInHtml:(NSString *)html {
+    html = [html stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    html = [html stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
+    html = [html stringByReplacingOccurrencesOfString:@"> <" withString:@"><"];
+    html = [html stringByReplacingOccurrencesOfString:@"  " withString:@" "];
+    
+    return html;
+}
+
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html {
     if (self.imageLoading) {
         for (NSString* hash in [self.imgURLforHash allKeys]) {
             NSString* src = [self.imgURLforHash objectForKey:hash];
             NSString* path = self.imageLoading(src, ^(NSString* path) {
-                if (path && [path length] > 0) {                        
+                if (self.loaded) {
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        if (path && [path length] > 0) {
+                            // reload image with js
+                            NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
+                            [self.webView stringByEvaluatingJavaScriptFromString:js];
+                        } else {
+                            // disable image
+                            NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                            [self.webView stringByEvaluatingJavaScriptFromString:js];
+                        }
+                    });
+                } else {
+                    if (path && [path length] > 0) {
                         // reload image with js
                         NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
-                        [self.webView stringByEvaluatingJavaScriptFromString:js];
-                    });
+                        self.jsCode = [self.jsCode stringByAppendingString:js];
+                    } else {
+                        // disable image
+                        NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                        self.jsCode = [self.jsCode stringByAppendingString:js];
+                    }
                 }
             });
             
@@ -288,7 +317,7 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *youtubeEmbedRegex;
     dispatch_once(&onceToken, ^{
-        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*object.*src.*/v/(.*?)['|\"].*object>" options:NSRegularExpressionCaseInsensitive error:nil];
+        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*object.*src.*/v/(.*?)['|\"].*object\\s*>" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     
     NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
@@ -309,7 +338,32 @@
     return html;
 }
 
-//
+- (NSString *)disableIFrameForNonSupportedSrcInHtml:(NSString *)html {
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *iframeRegex;
+    dispatch_once(&onceToken, ^{
+        iframeRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*iframe[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'].*/\\s*iframe\\s*>" options:0 error:nil];
+    });
+    
+    NSArray *matchs = [iframeRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {    
+        NSRange iframeRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
+        NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
+        NSString* src = [html substringWithRange:srcRange];
+        
+        NSURLRequest* request = [NSURLRequest requestWithURL:[NSURL URLWithString:src]];
+        BOOL allowIframe = [self webView:self.webView shouldStartLoadWithRequest:request navigationType:UIWebViewNavigationTypeOther];
+        if (!allowIframe) {
+            html = [html stringByReplacingCharactersInRange:iframeRange withString:@""];
+            
+            rangeOffset -= iframeRange.length;
+        }
+    }
+    
+    return html;
+}
 
 + (NSString*)getSystemFont {
     static dispatch_once_t onceToken;
@@ -393,7 +447,12 @@
     self.loaded = YES;
     
     if (self.jsCode) {
-        [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];
+        // make shure what all modifications of self.jsCode property are done
+        double delayInSeconds = 0.1;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];
+        });
     }
     
     if (self.competitionBlock) {
