@@ -10,6 +10,7 @@
 * 100% native look and feel
 * Offline images support (Any format including animated gif)
 * Video support (object YouTube, iframe YouTube, iframe Vimeo)
+* All images support Retina display
 * Extra Low memory usage
 * Stable (never crashed)
 
