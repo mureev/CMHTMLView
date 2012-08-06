@@ -11,7 +11,7 @@
 
 #define kDefaultDocumentMeta        @"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/>"
 
-#define kDefaultDocumentHtmlStyle   @"html {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-user-select:none; -webkit-text-size-adjust:none; word-wrap:break-word;}"
+#define kDefaultDocumentHtmlStyle   @"html {-webkit-tap-highlight-color:rgba(0,0,0,0); -webkit-text-size-adjust:none; word-wrap:break-word;}"
 
 #define kDefaultDocumentBodyStyle   @"body {margin:0; padding:10px 9px; font-family:%@; font-size:%.0f; line-height:%.1f;} a:link {color: #3A75C4; text-decoration: underline;} img,video,iframe {display:block; padding:0 0 5px; margin:0 auto;} table {font-size:10px;}"
 
@@ -63,7 +63,7 @@
         self.webView.allowsInlineMediaPlayback = YES;
         self.webView.mediaPlaybackRequiresUserAction = NO;
         
-        [CMHTMLView removeBackgroundFromWebView:self.webView];      
+        [CMHTMLView removeBackgroundFromWebView:self.webView];
         [self addSubview:self.webView];
         
         self.jsCode = [NSString string];
@@ -103,7 +103,7 @@
         if ([[subview class] isSubclassOfClass: [UIScrollView class]]) {
             return subview;
         }
-    }    
+    }
     return nil;
 }
 
@@ -111,7 +111,7 @@
     return [NSArray arrayWithArray:self.imgURLs];
 }
 
-- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {    
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
     [self clean];
     
@@ -195,13 +195,13 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *imgRegex;
     dispatch_once(&onceToken, ^{
-        imgRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:NSRegularExpressionCaseInsensitive error:nil];
+        imgRegex = [[NSRegularExpression alloc] initWithPattern:@"<img[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'][^>]*\\/*>" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     
     NSArray *matchs = [imgRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange imgRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -226,13 +226,13 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *tableRegex;
     dispatch_once(&onceToken, ^{
-        tableRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*table.*width(.?)['|\"].*>" options:NSRegularExpressionCaseInsensitive error:nil];
+        tableRegex = [[NSRegularExpression alloc] initWithPattern:@"<table.*width(.?)['|\"].*>" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     
     NSArray *matchs = [tableRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange widthRange = NSMakeRange([match rangeAtIndex:1].location - 5 + rangeOffset, [match rangeAtIndex:1].length);
         
         html = [html stringByReplacingCharactersInRange:widthRange withString:@""];
@@ -248,6 +248,15 @@
     html = [html stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
     html = [html stringByReplacingOccurrencesOfString:@"> <" withString:@"><"];
     html = [html stringByReplacingOccurrencesOfString:@"  " withString:@" "];
+    
+    // Doubled <br> replace
+    static dispatch_once_t onceToken;
+    static NSRegularExpression *brRegex;
+    dispatch_once(&onceToken, ^{
+        brRegex = [[NSRegularExpression alloc] initWithPattern:@"<br[^>]*>\\s*<br[^>]*>" options:NSRegularExpressionCaseInsensitive error:nil];
+    });
+    
+    html = [brRegex stringByReplacingMatchesInString:html options:0 range:NSMakeRange(0, [html length]) withTemplate:@"<br>"];
     
     return html;
 }
@@ -297,13 +306,13 @@
 }
 
 - (NSString *)removeTag:(NSString *)tag html:(NSString *)html {
-    NSString* pattern = [NSString stringWithFormat:@"<\\s*/?\\s*%@[^>]*>", tag];
+    NSString* pattern = [NSString stringWithFormat:@"</?\\s*%@[^>]*>", tag];
     NSRegularExpression *removeTagExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
     
     NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
         html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
         
@@ -317,13 +326,13 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *youtubeEmbedRegex;
     dispatch_once(&onceToken, ^{
-        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*object.*src.*/v/(.*?)['|\"].*object\\s*>" options:NSRegularExpressionCaseInsensitive error:nil];
+        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<object.*src.*/v/(.*?)['|\"].*object\\s*>" options:NSRegularExpressionCaseInsensitive error:nil];
     });
     
     NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange objectRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange idRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* youtubrId = [html substringWithRange:idRange];
@@ -342,13 +351,13 @@
     static dispatch_once_t onceToken;
     static NSRegularExpression *iframeRegex;
     dispatch_once(&onceToken, ^{
-        iframeRegex = [[NSRegularExpression alloc] initWithPattern:@"<\\s*iframe[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'].*/\\s*iframe\\s*>" options:0 error:nil];
+        iframeRegex = [[NSRegularExpression alloc] initWithPattern:@"<iframe[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'].*/\\s*iframe\\s*>" options:0 error:nil];
     });
     
     NSArray *matchs = [iframeRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange iframeRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -370,7 +379,7 @@
     static NSString* font;
     
     dispatch_once(&onceToken, ^{
-        //get system default font 
+        //get system default font
         //font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
         
         font = @"'HelveticaNeue-Light', 'HelveticaNeue'";
@@ -397,7 +406,7 @@
     CC_MD5(ptr, strlen(ptr), md5Buffer);
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) 
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
         [output appendFormat:@"%02x",md5Buffer[i]];
     
     return output;
@@ -452,11 +461,12 @@
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];
+            
+            if (self.competitionBlock) {
+                self.competitionBlock(nil);
+            }
+            
         });
-    }
-    
-    if (self.competitionBlock) {
-        self.competitionBlock(nil);
     }
 }
 
