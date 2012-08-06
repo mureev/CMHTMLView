@@ -8,8 +8,9 @@
 # Features
 
 * 100% native look and feel
-* Offline images support
-* Low memory usage
+* Offline images support (Any format including animated gif)
+* Video support (object YouTube, iframe YouTube, iframe Vimeo)
+* Extra Low memory usage
 * Stable (never crashed)
 
 # License
