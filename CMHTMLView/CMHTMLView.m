@@ -63,7 +63,7 @@
         self.webView.allowsInlineMediaPlayback = YES;
         self.webView.mediaPlaybackRequiresUserAction = NO;
         
-        [CMHTMLView removeBackgroundFromWebView:self.webView];
+        [CMHTMLView removeBackgroundFromWebView:self.webView];      
         [self addSubview:self.webView];
         
         self.jsCode = [NSString string];
@@ -103,7 +103,7 @@
         if ([[subview class] isSubclassOfClass: [UIScrollView class]]) {
             return subview;
         }
-    }
+    }    
     return nil;
 }
 
@@ -111,7 +111,7 @@
     return [NSArray arrayWithArray:self.imgURLs];
 }
 
-- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {    
     self.competitionBlock = competition;
     [self clean];
     
@@ -201,7 +201,7 @@
     NSArray *matchs = [imgRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
+    for (NSTextCheckingResult *match in matchs) {    
         NSRange imgRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -232,7 +232,7 @@
     NSArray *matchs = [tableRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
+    for (NSTextCheckingResult *match in matchs) {    
         NSRange widthRange = NSMakeRange([match rangeAtIndex:1].location - 5 + rangeOffset, [match rangeAtIndex:1].length);
         
         html = [html stringByReplacingCharactersInRange:widthRange withString:@""];
@@ -285,8 +285,14 @@
                         self.jsCode = [self.jsCode stringByAppendingString:js];
                     } else {
                         // disable image
-                        NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
-                        self.jsCode = [self.jsCode stringByAppendingString:js];
+                        if (self.imgURLs) {
+                            [self.imgURLs removeObject:src];
+                        }
+                        
+                        if (self.jsCode) {
+                            NSString* js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                            self.jsCode = [self.jsCode stringByAppendingString:js];
+                        }
                     }
                 }
             });
@@ -312,7 +318,7 @@
     NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
+    for (NSTextCheckingResult *match in matchs) {    
         NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
         html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
         
@@ -332,7 +338,7 @@
     NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
+    for (NSTextCheckingResult *match in matchs) {    
         NSRange objectRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange idRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* youtubrId = [html substringWithRange:idRange];
@@ -357,7 +363,7 @@
     NSArray *matchs = [iframeRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
+    for (NSTextCheckingResult *match in matchs) {    
         NSRange iframeRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -379,7 +385,7 @@
     static NSString* font;
     
     dispatch_once(&onceToken, ^{
-        //get system default font
+        //get system default font 
         //font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
         
         font = @"'HelveticaNeue-Light', 'HelveticaNeue'";
@@ -406,7 +412,7 @@
     CC_MD5(ptr, strlen(ptr), md5Buffer);
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) 
         [output appendFormat:@"%02x",md5Buffer[i]];
     
     return output;
