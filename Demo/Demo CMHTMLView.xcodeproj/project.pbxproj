@@ -310,7 +310,7 @@
 		AD4D9F4114ECCBF400E0EB9F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Team Force LLC";
 			};
 			buildConfigurationList = AD4D9F4414ECCBF400E0EB9F /* Build configuration list for PBXProject "Demo CMHTMLView" */;

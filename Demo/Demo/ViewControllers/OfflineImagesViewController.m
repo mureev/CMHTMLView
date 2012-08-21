@@ -62,7 +62,9 @@
                 }
             }];
             
-            return nil;
+            // Hook for compiler
+            NSString *nilResult = nil;            
+            return nilResult;
         }
     };
     
