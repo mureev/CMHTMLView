@@ -17,6 +17,8 @@
 
 #define kDefaultDocumentRotateStyle @"@media (orientation:portrait) { img,video,iframe {max-width:%.0fpx; height:auto;}} @media (orientation:landscape) { img,video,iframe {max-width:%.0fpx; height:auto;}}"
 
+#define kFastClickJs                @"self.FastClick=function(){function k(a){return/\bneedsclick\b/.test(a.className)||{select:!0,input:!0,label:!0,video:!0}[a.nodeName.toLowerCase()]}var l=-1===navigator.userAgent.indexOf(\"PlayBook\")?5:20;return function(a){var d=0,e=0,g=0,h=0,b=!1,m=Math.pow(37,2),n=function(c){b=!0;d=c.targetTouches[0].pageX;e=c.targetTouches[0].pageY;d===c.targetTouches[0].clientX&&(d+=window.pageXOffset);e===c.targetTouches[0].clientY&&(e+=window.pageYOffset);g=window.pageXOffset;h=window.pageYOffset;return!0},o=function(c){if(!b)return!0;Math.pow(c.targetTouches[0].pageX-d,2)+Math.pow(c.targetTouches[0].pageY-e,2)>m&&(b=!1);if(Math.abs(window.pageXOffset-g)>l||Math.abs(window.pageYOffset-h)>l)b=!1;return!0},p=function(c){var a,j,f,i;if(!b)return!0;b=!1;a=d-g;j=e-h;f=document.elementFromPoint(a,j);if(!f)return!1;f.nodeType===Node.TEXT_NODE&&(f=f.parentElement);if(k(f))return!1;i=document.createEvent(\"MouseEvents\");i.initMouseEvent(\"click\",!0,!0,window,1,0,0,a,j,!1,!1,!1,!1,0,null);i.forwardedTouchEvent=!0;f.dispatchEvent(i);c.preventDefault();return!1},q=function(){b=!1},r=function(a){var b;if(a.forwardedTouchEvent||!a.cancelable)return!0;b=document.elementFromPoint(d-g,e-h);return!b||!k(b)?(a.stopPropagation(),a.preventDefault(),a.stopImmediatePropagation&&a.stopImmediatePropagation(),!1):!0};if(!a||!a.nodeType)throw new TypeError(\"Layer must be a document node\");\"undefined\"!==typeof window.ontouchstart&&(a.addEventListener(\"click\",r,!0),a.addEventListener(\"touchstart\",n,!0),a.addEventListener(\"touchmove\",o,!0),a.addEventListener(\"touchend\",p,!0),a.addEventListener(\"touchcancel\",q,!0),\"function\"===typeof a.onclick&&(a.addEventListener(\"click\",a.onclick,!1),a.onclick=null))}}(); window.addEventListener('load', function() {new FastClick(document.body);}, false);"
+
 
 @interface CMHTMLView() <UIWebViewDelegate>
 
@@ -63,7 +65,7 @@
         self.webView.allowsInlineMediaPlayback = YES;
         self.webView.mediaPlaybackRequiresUserAction = NO;
         
-        [CMHTMLView removeBackgroundFromWebView:self.webView];      
+        [CMHTMLView removeBackgroundFromWebView:self.webView];
         [self addSubview:self.webView];
         
         self.jsCode = [NSString string];
@@ -103,7 +105,7 @@
         if ([[subview class] isSubclassOfClass: [UIScrollView class]]) {
             return subview;
         }
-    }    
+    }
     return nil;
 }
 
@@ -111,7 +113,7 @@
     return [NSArray arrayWithArray:self.imgURLs];
 }
 
-- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {    
+- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition {
     self.competitionBlock = competition;
     [self clean];
     
@@ -148,7 +150,7 @@
         NSString* rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait-18, self.maxWidthLandscape-18];
         
         // Create full page code
-        NSString* body = [NSString stringWithFormat:@"<html><head>%@<style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, additionalStyle, loadHTML];
+        NSString* body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, additionalStyle, loadHTML];
         
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -201,7 +203,7 @@
     NSArray *matchs = [imgRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange imgRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -232,7 +234,7 @@
     NSArray *matchs = [tableRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange widthRange = NSMakeRange([match rangeAtIndex:1].location - 5 + rangeOffset, [match rangeAtIndex:1].length);
         
         html = [html stringByReplacingCharactersInRange:widthRange withString:@""];
@@ -318,7 +320,7 @@
     NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
         html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
         
@@ -338,7 +340,7 @@
     NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange objectRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange idRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* youtubrId = [html substringWithRange:idRange];
@@ -363,7 +365,7 @@
     NSArray *matchs = [iframeRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
     
     NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {    
+    for (NSTextCheckingResult *match in matchs) {
         NSRange iframeRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString* src = [html substringWithRange:srcRange];
@@ -385,7 +387,7 @@
     static NSString* font;
     
     dispatch_once(&onceToken, ^{
-        //get system default font 
+        //get system default font
         //font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
         
         font = @"'HelveticaNeue-Light', 'HelveticaNeue'";
@@ -412,7 +414,7 @@
     CC_MD5(ptr, strlen(ptr), md5Buffer);
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
     
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) 
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
         [output appendFormat:@"%02x",md5Buffer[i]];
     
     return output;
