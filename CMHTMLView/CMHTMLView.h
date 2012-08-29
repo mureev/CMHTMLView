@@ -28,6 +28,7 @@ typedef void (^UrlClickBlock)(NSString* url);
 @property (assign) CGFloat              lineHeight;
 @property (retain) NSString*            defaultImagePath;
 @property (assign) BOOL                 disableAHrefForImages;
+@property (retain) NSString*            additionalStyle;
 
 // Callbacks
 @property (copy) ImagePathBlock         imageLoading;

@@ -46,7 +46,7 @@
 
 @implementation CMHTMLView
 
-@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, removeTags, fontFamily, fontSize, lineHeight, defaultImagePath, disableAHrefForImages, imageLoading, imageClick, urlClick;
+@synthesize loaded, webView, competitionBlock, jsCode, imgURLforHash, imgURLs, maxWidthPortrait, maxWidthLandscape, blockTags, removeTags, fontFamily, fontSize, lineHeight, defaultImagePath, disableAHrefForImages, additionalStyle, imageLoading, imageClick, urlClick;
 @dynamic scrollView, images;
 
 
@@ -88,6 +88,7 @@
     self.removeTags = nil;
     self.fontFamily = nil;
     self.defaultImagePath = nil;
+    self.additionalStyle = nil;
     self.imageLoading = nil;
     self.imageClick = nil;
     self.urlClick = nil;
@@ -126,10 +127,14 @@
         loadHTML = [self disableIFrameForNonSupportedSrcInHtml:loadHTML];
         
         // Add blocking some HTML tags
-        NSString* additionalStyle = @"";
+        NSString *localacAdditionalStyle = self.additionalStyle;
+        if (!localacAdditionalStyle) {
+            localacAdditionalStyle = @"";
+        }
+        
         if (self.blockTags) {
             for (NSString* tag in self.blockTags) {
-                additionalStyle = [additionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
+                localacAdditionalStyle = [localacAdditionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
             }
         }
         
@@ -150,7 +155,7 @@
         NSString* rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait-18, self.maxWidthLandscape-18];
         
         // Create full page code
-        NSString* body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, additionalStyle, loadHTML];
+        NSString* body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, localacAdditionalStyle, loadHTML];
         
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
