@@ -56,7 +56,7 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)] autorelease];
+        self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         self.webView.backgroundColor = [UIColor clearColor];
         self.webView.opaque = NO;
         self.webView.delegate = self;
@@ -92,8 +92,6 @@
     self.imageLoading = nil;
     self.imageClick = nil;
     self.urlClick = nil;
-    
-    [super dealloc];
 }
 
 

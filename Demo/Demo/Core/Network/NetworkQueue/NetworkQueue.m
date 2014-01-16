@@ -31,14 +31,13 @@ static NSOperationQueue* get_network_operations_io_queue() {
         [requestOperation cancel];
     };
     
-    block = [[block copy] autorelease];
+    block = [block copy];
     
     [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         completion(operation.request, operation.response, responseObject, nil);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         completion(operation.request, operation.response, nil, error);
     }];
-    [requestOperation autorelease];
     [get_network_operations_io_queue() addOperation:requestOperation];
     
     return block;

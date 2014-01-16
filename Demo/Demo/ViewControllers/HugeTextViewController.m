@@ -14,13 +14,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];    
-    CMHTMLView* htmlView = [[[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
+    CMHTMLView* htmlView = [[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     htmlView.backgroundColor = [UIColor whiteColor];
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     NSString* filePath = [[NSBundle mainBundle] pathForResource:@"WarAndPeace" ofType:@"html"];  
     NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
-    NSString* htmlString = [[[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding] autorelease];
+    NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
     
     htmlView.alpha = 0;
     

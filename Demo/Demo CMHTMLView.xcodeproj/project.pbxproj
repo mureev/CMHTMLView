@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AD215CF114FE6A1600D9541E /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AD215CE914FE6A1600D9541E /* AFHTTPRequestOperation.m */; };
-		AD215CF214FE6A1600D9541E /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AD215CEB14FE6A1600D9541E /* AFNetworkActivityIndicatorManager.m */; };
-		AD215CF314FE6A1600D9541E /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AD215CED14FE6A1600D9541E /* AFURLConnectionOperation.m */; };
-		AD215CF414FE6A1600D9541E /* CMDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = AD215CF014FE6A1600D9541E /* CMDataStorage.m */; };
+		0DC354FFEBD14FBF81267318 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2363924CD14C589D74AD80 /* libPods.a */; };
 		AD4D9F4F14ECCBF400E0EB9F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4D9F4E14ECCBF400E0EB9F /* UIKit.framework */; };
 		AD4D9F5114ECCBF400E0EB9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4D9F5014ECCBF400E0EB9F /* Foundation.framework */; };
 		AD4D9F5314ECCBF400E0EB9F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD4D9F5214ECCBF400E0EB9F /* CoreGraphics.framework */; };
@@ -45,14 +42,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AD215CE814FE6A1600D9541E /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
-		AD215CE914FE6A1600D9541E /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
-		AD215CEA14FE6A1600D9541E /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
-		AD215CEB14FE6A1600D9541E /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
-		AD215CEC14FE6A1600D9541E /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
-		AD215CED14FE6A1600D9541E /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
-		AD215CEF14FE6A1600D9541E /* CMDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMDataStorage.h; sourceTree = "<group>"; };
-		AD215CF014FE6A1600D9541E /* CMDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMDataStorage.m; sourceTree = "<group>"; };
 		AD4D9F4A14ECCBF400E0EB9F /* Demo CMHTMLView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo CMHTMLView.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD4D9F4E14ECCBF400E0EB9F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AD4D9F5014ECCBF400E0EB9F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +85,8 @@
 		ADE6DA4C14EE771100D57312 /* pixel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pixel.png; sourceTree = "<group>"; };
 		ADE7438815D3825100937E7B /* CMHTMLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMHTMLView.h; sourceTree = "<group>"; };
 		ADE7438915D3825100937E7B /* CMHTMLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMHTMLView.m; sourceTree = "<group>"; };
+		B833A107E06040B2AC17B2A5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		ED2363924CD14C589D74AD80 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,50 +97,20 @@
 				AD4D9F4F14ECCBF400E0EB9F /* UIKit.framework in Frameworks */,
 				AD4D9F5114ECCBF400E0EB9F /* Foundation.framework in Frameworks */,
 				AD4D9F5314ECCBF400E0EB9F /* CoreGraphics.framework in Frameworks */,
+				0DC354FFEBD14FBF81267318 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AD215CE614FE6A1600D9541E /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				AD215CE714FE6A1600D9541E /* AFNetworking */,
-				AD215CEE14FE6A1600D9541E /* CMDataStorage */,
-			);
-			name = Libraries;
-			path = libraries;
-			sourceTree = "<group>";
-		};
-		AD215CE714FE6A1600D9541E /* AFNetworking */ = {
-			isa = PBXGroup;
-			children = (
-				AD215CE814FE6A1600D9541E /* AFHTTPRequestOperation.h */,
-				AD215CE914FE6A1600D9541E /* AFHTTPRequestOperation.m */,
-				AD215CEA14FE6A1600D9541E /* AFNetworkActivityIndicatorManager.h */,
-				AD215CEB14FE6A1600D9541E /* AFNetworkActivityIndicatorManager.m */,
-				AD215CEC14FE6A1600D9541E /* AFURLConnectionOperation.h */,
-				AD215CED14FE6A1600D9541E /* AFURLConnectionOperation.m */,
-			);
-			path = AFNetworking;
-			sourceTree = "<group>";
-		};
-		AD215CEE14FE6A1600D9541E /* CMDataStorage */ = {
-			isa = PBXGroup;
-			children = (
-				AD215CEF14FE6A1600D9541E /* CMDataStorage.h */,
-				AD215CF014FE6A1600D9541E /* CMDataStorage.m */,
-			);
-			path = CMDataStorage;
-			sourceTree = "<group>";
-		};
 		AD4D9F3F14ECCBF400E0EB9F = {
 			isa = PBXGroup;
 			children = (
 				AD4D9F5414ECCBF400E0EB9F /* Demo */,
 				AD4D9F4D14ECCBF400E0EB9F /* Frameworks */,
 				AD4D9F4B14ECCBF400E0EB9F /* Products */,
+				B833A107E06040B2AC17B2A5 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -167,6 +128,7 @@
 				AD4D9F4E14ECCBF400E0EB9F /* UIKit.framework */,
 				AD4D9F5014ECCBF400E0EB9F /* Foundation.framework */,
 				AD4D9F5214ECCBF400E0EB9F /* CoreGraphics.framework */,
+				ED2363924CD14C589D74AD80 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -177,7 +139,6 @@
 				ADE7438715D3825100937E7B /* CMHTMLView */,
 				ADB1B0CD14ECCCAE007E85C8 /* ViewControllers */,
 				ADE6DA3114EE731E00D57312 /* Core */,
-				AD215CE614FE6A1600D9541E /* Libraries */,
 				AD4D9F5D14ECCBF400E0EB9F /* AppDelegate.h */,
 				AD4D9F5E14ECCBF400E0EB9F /* AppDelegate.m */,
 				ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */,
@@ -291,9 +252,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD4D9F7C14ECCBF400E0EB9F /* Build configuration list for PBXNativeTarget "Demo CMHTMLView" */;
 			buildPhases = (
+				78FC9635421F43EDA0CA1E18 /* Check Pods Manifest.lock */,
 				AD4D9F4614ECCBF400E0EB9F /* Sources */,
 				AD4D9F4714ECCBF400E0EB9F /* Frameworks */,
 				AD4D9F4814ECCBF400E0EB9F /* Resources */,
+				FFC4DF69BCFC4541BA8CA8B8 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -358,6 +321,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		78FC9635421F43EDA0CA1E18 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		FFC4DF69BCFC4541BA8CA8B8 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AD4D9F4614ECCBF400E0EB9F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -372,10 +368,6 @@
 				ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */,
 				ADB1B0FF14ECF375007E85C8 /* RotatingTabBarController.m in Sources */,
 				ADE6DA4714EE731E00D57312 /* NetworkQueue.m in Sources */,
-				AD215CF114FE6A1600D9541E /* AFHTTPRequestOperation.m in Sources */,
-				AD215CF214FE6A1600D9541E /* AFNetworkActivityIndicatorManager.m in Sources */,
-				AD215CF314FE6A1600D9541E /* AFURLConnectionOperation.m in Sources */,
-				AD215CF414FE6A1600D9541E /* CMDataStorage.m in Sources */,
 				ADE7438A15D3825100937E7B /* CMHTMLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -387,10 +379,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -402,11 +392,11 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -416,19 +406,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					"$(ARCHS_STANDARD_32_BIT)",
-				);
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -438,6 +426,7 @@
 		};
 		AD4D9F7D14ECCBF400E0EB9F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B833A107E06040B2AC17B2A5 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Demo/Demo CMHTMLView-Prefix.pch";
@@ -450,6 +439,7 @@
 		};
 		AD4D9F7E14ECCBF400E0EB9F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B833A107E06040B2AC17B2A5 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Demo/Demo CMHTMLView-Prefix.pch";
