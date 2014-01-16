@@ -1,4 +1,7 @@
-# CMHTMLView
+# CMHTMLView (under new version development!) ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
+
+[![Badge w/ Version](https://cocoapod-badges.herokuapp.com/v/CMHTMLView/badge.png)](http://cocoadocs.org/docsets/CMHTMLView)
+[![Badge w/ Platform](https://cocoapod-badges.herokuapp.com/p/CMHTMLView/badge.png)](http://cocoadocs.org/docsets/CMHTMLView)
 
 **Simple, stable, powerfull rich content control (HTML) for iOS developers.**
 
