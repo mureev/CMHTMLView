@@ -7,6 +7,21 @@
 
 #import "CMHTMLView.h"
 
+#import <sys/time.h>
+
+void NSProfile(const char *name, void (^work)(void)) {
+    struct timeval start, end;
+    
+    gettimeofday(&start, NULL);
+    work();
+    gettimeofday(&end, NULL);
+    
+    double startTime = (start.tv_sec * 1000000.0 + start.tv_usec) / 1000000.0;
+    double endTime = (end.tv_sec * 1000000.0 + end.tv_usec) / 1000000.0;
+    
+    printf("NSProfile :: %s took %f seconds\n", name, endTime - startTime);
+}
+
 #define kNativeShame                @"native"
 
 #define kDefaultDocumentMeta        @"<meta name=\"viewport\" content=\"initial-scale=1.0; user-scalable=0; minimum-scale=1.0; maximum-scale=1.0\"/><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"/>"
@@ -78,45 +93,41 @@
 }
 
 - (void)loadHtmlBody:(NSString *)html {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         NSString *loadHTML = [self prepareImagesInHtml:html];
         loadHTML = [self loadImagesBasedOnHtml:loadHTML];
-        loadHTML = [self simplifyTablesInHtml:loadHTML];
-        loadHTML = [self removeExtraLineBreaksInHtml:loadHTML];
-        loadHTML = [self extendYouTubeSupportInHtml:loadHTML];
-        loadHTML = [self disableIFrameForNonSupportedSrcInHtml:loadHTML];
-
+        
         // Add blocking some HTML tags
         NSString *localacAdditionalStyle = self.additionalStyle;
         if (!localacAdditionalStyle) {
             localacAdditionalStyle = @"";
         }
-
+        
         if (self.blockTags) {
             for (NSString *tag in self.blockTags) {
                 localacAdditionalStyle = [localacAdditionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
             }
         }
-
+        
         // Remove some HTML tags
         if (self.removeTags) {
             for (NSString *tag in self.removeTags) {
                 loadHTML = [self removeTag:tag html:loadHTML];
             }
         }
-
+        
         // Disable <a href=""> for <img> tags
         if (self.disableAHrefForImages) {
             self.jsCode = [self.jsCode stringByAppendingString:@" var link, img, arr;arr = document.getElementsByTagName('img');for (i in arr) {img = arr[i];link = img.parentNode;if (link && link.tagName.toLowerCase() == 'a') {link.removeAttribute('href');}}"];
         }
-
+        
         // Create <head> for page
         NSString *bodyStyle = [NSString stringWithFormat:kDefaultDocumentBodyStyle, self.fontFamily, self.fontSize, self.lineHeight];
         NSString *rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait - 18, self.maxWidthLandscape - 18];
-
+        
         // Create full page code
         NSString *body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, localacAdditionalStyle, loadHTML];
-
+        
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
@@ -209,45 +220,6 @@
     return html;
 }
 
-- (NSString *)simplifyTablesInHtml:(NSString *)html {
-    static dispatch_once_t onceToken;
-    static NSRegularExpression *tableRegex;
-    dispatch_once(&onceToken, ^{
-        tableRegex = [[NSRegularExpression alloc] initWithPattern:@"<table.*width(.?)['|\"].*>" options:NSRegularExpressionCaseInsensitive error:nil];
-    });
-
-    NSArray *matchs = [tableRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
-
-    NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
-        NSRange widthRange = NSMakeRange([match rangeAtIndex:1].location - 5 + rangeOffset, [match rangeAtIndex:1].length);
-
-        html = [html stringByReplacingCharactersInRange:widthRange withString:@""];
-
-        rangeOffset -= widthRange.length;
-    }
-
-    return html;
-}
-
-- (NSString *)removeExtraLineBreaksInHtml:(NSString *)html {
-    html = [html stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-    html = [html stringByReplacingOccurrencesOfString:@"\t" withString:@" "];
-    html = [html stringByReplacingOccurrencesOfString:@"> <" withString:@"><"];
-    html = [html stringByReplacingOccurrencesOfString:@"  " withString:@" "];
-
-    // Doubled <br> replace
-    static dispatch_once_t onceToken;
-    static NSRegularExpression *brRegex;
-    dispatch_once(&onceToken, ^{
-        brRegex = [[NSRegularExpression alloc] initWithPattern:@"<br[^>]*>\\s*<br[^>]*>" options:NSRegularExpressionCaseInsensitive error:nil];
-    });
-
-    html = [brRegex stringByReplacingMatchesInString:html options:0 range:NSMakeRange(0, [html length]) withTemplate:@"<br>"];
-
-    return html;
-}
-
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html {
     if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewWillWaitForImage:imageUrl:imagePath:)]) {
         for (NSString *hash in [self.imgURLforHash allKeys]) {
@@ -272,7 +244,7 @@
                             // reload image with js
                             NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
                             self.jsCode = [self.jsCode stringByAppendingString:js];
-                        } else {                            
+                        } else {
                             if (self.jsCode) {
                                 NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
                                 self.jsCode = [self.jsCode stringByAppendingString:js];
@@ -307,58 +279,6 @@
         if (tagRange.location + tagRange.length <= html.length) {
             html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
             rangeOffset -= tagRange.length;
-        }
-    }
-
-    return html;
-}
-
-- (NSString *)extendYouTubeSupportInHtml:(NSString *)html {
-    static dispatch_once_t onceToken;
-    static NSRegularExpression *youtubeEmbedRegex;
-    dispatch_once(&onceToken, ^{
-        youtubeEmbedRegex = [[NSRegularExpression alloc] initWithPattern:@"<object.*src.*/v/(.*?)['|\"].*object\\s*>" options:NSRegularExpressionCaseInsensitive error:nil];
-    });
-
-    NSArray *matchs = [youtubeEmbedRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
-
-    NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
-        NSRange objectRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
-        NSRange idRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
-        NSString *youtubrId = [html substringWithRange:idRange];
-
-        // Add uniq id to img tag
-        NSString *iframe = [NSString stringWithFormat:@"<iframe src=\"http://www.youtube.com/embed/%@\" frameborder=\"0\" allowfullscreen></iframe>", youtubrId];
-        html = [html stringByReplacingCharactersInRange:objectRange withString:iframe];
-
-        rangeOffset += iframe.length - objectRange.length;
-    }
-
-    return html;
-}
-
-- (NSString *)disableIFrameForNonSupportedSrcInHtml:(NSString *)html {
-    static dispatch_once_t onceToken;
-    static NSRegularExpression *iframeRegex;
-    dispatch_once(&onceToken, ^{
-        iframeRegex = [[NSRegularExpression alloc] initWithPattern:@"<iframe[^>]*src=[\\\"|\\'](.*?)[\\\"|\\'].*/\\s*iframe\\s*>" options:0 error:nil];
-    });
-
-    NSArray *matchs = [iframeRegex matchesInString:html options:0 range:NSMakeRange(0, html.length)];
-
-    NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
-        NSRange iframeRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
-        NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
-        NSString *src = [html substringWithRange:srcRange];
-
-        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:src]];
-        BOOL allowIframe = [self webView:self.webView shouldStartLoadWithRequest:request navigationType:UIWebViewNavigationTypeOther];
-        if (!allowIframe) {
-            html = [html stringByReplacingCharactersInRange:iframeRange withString:@""];
-
-            rangeOffset -= iframeRange.length;
         }
     }
 
@@ -422,11 +342,6 @@
             return YES;
         } else if ([[url absoluteString] rangeOfString:@"www.youtube.com"].location != NSNotFound) {
             return YES;
-        } else if ([[url host] isEqualToString:@"player.vimeo.com"]) {
-            return YES;
-        } else if ([url.absoluteString rangeOfString:@"src=http://www.youtube"].location != NSNotFound) {
-            //http://reader.googleusercontent.com/reader/embediframe?src=http://www.youtube.com/v/4OD770n60cA?version%3D3%26hl%3Dpt_BR&width=640&height=360
-            return NO;
         } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewDidTapLink:linkUrl:)]) {
                 [self.delegate htmlViewDidTapLink:self linkUrl:[url absoluteString]];
