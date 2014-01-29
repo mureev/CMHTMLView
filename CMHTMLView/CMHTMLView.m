@@ -22,12 +22,12 @@
 
 @interface CMHTMLView () <UIWebViewDelegate>
 
-@property (assign) BOOL loaded;
-@property (retain) UIWebView *webView;
-@property (retain) NSString *jsCode;
-@property (retain) NSMutableDictionary *imgURLforHash;
-@property (retain) NSMutableArray *imgURLs;
-@property (assign) CGPoint lastContentOffset;
+@property (nonatomic) BOOL loaded;
+@property (nonatomic) UIWebView *webView;
+@property (nonatomic) NSString *jsCode;
+@property (nonatomic) NSMutableDictionary *imgURLforHash;
+@property (nonatomic) NSMutableArray *imgURLs;
+@property (nonatomic) CGPoint lastContentOffset;
 
 @end
 
@@ -387,7 +387,7 @@
 
     dispatch_once(&onceToken, ^{
         //get system default font 
-        //font = [[UIFont systemFontOfSize:[UIFont systemFontSize]].fontName retain];
+        //font = [UIFont systemFontOfSize:[UIFont systemFontSize]].fontName;
 
         font = @"'HelveticaNeue-Light', 'HelveticaNeue'";
     });
