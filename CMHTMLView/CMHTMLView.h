@@ -10,8 +10,6 @@
 
 typedef void (^SetImagePathBlock)(NSString *path);
 
-typedef void (^ImagePathBlock)(NSString *url, SetImagePathBlock setImage);
-
 @protocol CMHTMLViewDelegate;
 
 @interface CMHTMLView : UIView
@@ -46,6 +44,8 @@ typedef void (^ImagePathBlock)(NSString *url, SetImagePathBlock setImage);
 @optional
 
 - (void)htmlViewDidFinishLoad:(CMHTMLView *)htmlView withError:(NSError *)error;
+
+- (void)htmlViewWillWaitForImage:(CMHTMLView *)htmlView imageUrl:(NSString *)url imagePath:(SetImagePathBlock)path;
 
 - (void)htmlViewDidScroll:(CMHTMLView *)htmlView;
 

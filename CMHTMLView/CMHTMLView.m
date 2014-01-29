@@ -263,14 +263,13 @@
 }
 
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html {
-    /*
-    if (self.imageLoading) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewWillWaitForImage:imageUrl:imagePath:)]) {
         for (NSString *hash in [self.imgURLforHash allKeys]) {
             NSMutableArray *tmpImgURLs = self.imgURLs;
             NSString *src = [self.imgURLforHash objectForKey:hash];
 
             if (src && src.length > 0 && hash && hash.length > 0) {
-                self.imageLoading(src, ^(NSString *path) {
+                [self.delegate htmlViewWillWaitForImage:self imageUrl:src imagePath:^(NSString *path) {
                     if (self.loaded) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (path && [path length] > 0) {
@@ -293,14 +292,14 @@
                             if (tmpImgURLs) {
                                 [tmpImgURLs removeObject:src];
                             }
-
+                            
                             if (self.jsCode) {
                                 NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
                                 self.jsCode = [self.jsCode stringByAppendingString:js];
                             }
                         }
                     }
-                });
+                }];
 
                 if (self.defaultImagePath) {
                     html = [html stringByReplacingOccurrencesOfString:src withString:self.defaultImagePath];
@@ -310,7 +309,7 @@
                 }
             }
         }
-    }*/
+    }
 
     return html;
 }

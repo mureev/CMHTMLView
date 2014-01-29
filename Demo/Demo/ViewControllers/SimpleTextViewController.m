@@ -20,14 +20,12 @@
     [super viewDidLoad];
     
     CMHTMLView* htmlView = [[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    
     htmlView.delegate = self;
     htmlView.alpha = 0;
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:htmlView];
     
     [htmlView loadHtmlBody:[self readHTMLContentFromFile:@"Simple"]];
-    
-    [self.view addSubview:htmlView];
 }
 
 - (NSString *)readHTMLContentFromFile:(NSString *)fileName {

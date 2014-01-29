@@ -6,86 +6,89 @@
 //
 
 #import "TranslucentViewController.h"
-#import "CMHTMLView.h"
-#import "NetworkQueue.h"
-#import "CMDataStorage.h"
 
+#import <AFNetworking/AFNetworking.h>
+#import <CMDataStorage/CMDataStorage.h>
+
+#import "CMHTMLView.h"
+
+
+@interface TranslucentViewController () <CMHTMLViewDelegate>
+
+@end
 
 @implementation TranslucentViewController
 
 
-- (NSString*)createWebPath:(NSString*) path {
-    path = [[NSURL fileURLWithPath:path isDirectory:NO] absoluteString];
-    path = [path stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-    
-    return path;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
     
     CMHTMLView* htmlView = [[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    htmlView.backgroundColor = [UIColor clearColor];
+    htmlView.delegate = self;
+    htmlView.alpha = 0;
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:htmlView];
     
     htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
     
-    htmlView.defaultImagePath = [self createWebPath:[[NSBundle mainBundle] pathForResource:@"pixel" ofType:@"png"]];
+    htmlView.defaultImagePath = [[[NSBundle mainBundle] URLForResource:@"pixel" withExtension:@"png"] absoluteString];
     htmlView.scrollView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
     htmlView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(44, 0, 0, 0);
     
-    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"Image" ofType:@"html"];  
-    NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
-    NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-    
-    htmlView.alpha = 0;
-    
-    /*
-    htmlView.urlClick = ^(NSString* url) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert show];
-    };
-    
-    htmlView.imageClick = ^(NSString* url) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert show];
-    };
-    
-    htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
-        
-    };
-    
-    htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
-        if ([[CMDataStorage sharedCacheStorage] isStored:url]) {
-            return [self createWebPath:[[CMDataStorage sharedCacheStorage] filePathWithKey:url]];
-        } else {
-            [NetworkQueue loadWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]] completion:^(NSURLRequest *request, NSHTTPURLResponse *response, NSData *data, NSError *error) {
-                if (!error) {
-                    [[CMDataStorage sharedCacheStorage] writeData:data key:url block:^(BOOL succeeds) {
-                        setImage([self createWebPath:[[CMDataStorage sharedCacheStorage] filePathWithKey:url]]);
-                    }];
-                }
-            }];
-        }
-    };
-    
-    [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
-        if (!error) {
-            [UIView animateWithDuration:0.2 animations:^{
-                htmlView.alpha = 1;
-            }];
-        }
-    }];
-    */
-    [self.view addSubview:htmlView];
+    [htmlView loadHtmlBody:[self readHTMLContentFromFile:@"Image"]];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (NSString *)readHTMLContentFromFile:(NSString *)fileName {
+    NSString* filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"html"];
+    NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
+    NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+    return htmlString;
+}
+
+
+#pragma mark - CMHTMLViewDelegate
+
+
+- (void)htmlViewDidFinishLoad:(CMHTMLView *)htmlView withError:(NSError *)error {
+    if (!error) {
+        [UIView animateWithDuration:0.2 animations:^{
+            htmlView.alpha = 1;
+        }];
     } else {
-        return YES;
+        htmlView.alpha = 0;
     }
+}
+
+- (void)htmlViewWillWaitForImage:(CMHTMLView *)htmlView imageUrl:(NSString *)url imagePath:(SetImagePathBlock)path {
+    if ([[CMDataStorage sharedCacheStorage] isStored:url]) {
+        path([[[CMDataStorage sharedCacheStorage] fileURLWithKey:url] absoluteString]);
+    } else {
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        
+        [manager GET:url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSData *data = responseObject;
+            
+            [[CMDataStorage sharedCacheStorage] writeData:data key:url block:^(BOOL succeeds) {
+                path([[[CMDataStorage sharedCacheStorage] fileURLWithKey:url] absoluteString]);
+            }];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
+    }
+}
+
+- (void)htmlViewDidTapImage:(CMHTMLView *)htmlView imageUrl:(NSString *)imageUrl {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image!" message:imageUrl delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)htmlViewDidTapLink:(CMHTMLView *)htmlView linkUrl:(NSString *)linkUrl {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL!" message:linkUrl delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [alert show];
 }
 
 @end
