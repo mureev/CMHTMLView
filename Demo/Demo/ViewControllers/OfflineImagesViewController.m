@@ -38,6 +38,7 @@
     
     htmlView.alpha = 0;
     
+    /*
     htmlView.urlClick = ^(NSString* url) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert show];
@@ -73,6 +74,7 @@
             }];
         }
     }];
+    */
     
     [self.view addSubview:htmlView];
 }

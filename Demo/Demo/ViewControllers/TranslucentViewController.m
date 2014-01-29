@@ -40,6 +40,7 @@
     
     htmlView.alpha = 0;
     
+    /*
     htmlView.urlClick = ^(NSString* url) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert show];
@@ -48,6 +49,10 @@
     htmlView.imageClick = ^(NSString* url) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
         [alert show];
+    };
+    
+    htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
+        
     };
     
     htmlView.imageLoading = ^(NSString* url, SetImagePathBlock setImage) {
@@ -61,10 +66,6 @@
                     }];
                 }
             }];
-            
-            // Hook for compiler
-            NSString *nilResult = nil;
-            return nilResult;
         }
     };
     
@@ -75,7 +76,7 @@
             }];
         }
     }];
-    
+    */
     [self.view addSubview:htmlView];
 }
 

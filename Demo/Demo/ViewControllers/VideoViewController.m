@@ -22,6 +22,7 @@
     NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
     NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
     
+    /*
     htmlView.alpha = 0;
     
     [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
@@ -31,6 +32,7 @@
             }];
         }
     }];
+    */
     
     [self.view addSubview:htmlView];
 }

@@ -22,15 +22,9 @@
     NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
     NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
     
-    htmlView.alpha = 0;
+    htmlView.alpha = 1;
     
-    [htmlView loadHtmlBody:htmlString competition:^(NSError *error) {
-        if (!error) {
-            [UIView animateWithDuration:0.2 animations:^{
-                htmlView.alpha = 1;
-            }];
-        }
-    }];
+    [htmlView loadHtmlBody:htmlString];
     
     [self.view addSubview:htmlView];
 }

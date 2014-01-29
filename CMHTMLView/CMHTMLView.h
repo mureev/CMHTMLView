@@ -8,37 +8,49 @@
 #import <UIKit/UIKit.h>
 #import <CommonCrypto/CommonDigest.h> // for MD5 hash
 
-typedef void (^CompetitionBlock)(NSError* error);
-typedef void (^SetImagePathBlock)(NSString* path);
-typedef NSString* (^ImagePathBlock)(NSString* url, SetImagePathBlock setImage);
-typedef void (^ImageClickBlock)(NSString* url);
-typedef void (^UrlClickBlock)(NSString* url);
+typedef void (^SetImagePathBlock)(NSString *path);
+
+typedef void (^ImagePathBlock)(NSString *url, SetImagePathBlock setImage);
+
+@protocol CMHTMLViewDelegate;
 
 @interface CMHTMLView : UIView
 
-@property (readonly) UIScrollView*      scrollView;
-@property (readonly) NSArray*           images;
+@property (nonatomic, weak) id <CMHTMLViewDelegate> delegate;
+@property (nonatomic, readonly) UIScrollView *scrollView;
 
-@property (assign) CGFloat              maxWidthPortrait;
-@property (assign) CGFloat              maxWidthLandscape;
-@property (retain) NSArray*             blockTags;
-@property (retain) NSArray*             removeTags;
-@property (retain) NSString*            fontFamily;
-@property (assign) CGFloat              fontSize;
-@property (assign) CGFloat              lineHeight;
-@property (retain) NSString*            defaultImagePath;
-@property (assign) BOOL                 disableAHrefForImages;
-@property (retain) NSString*            additionalStyle;
+@property (nonatomic) CGFloat maxWidthPortrait;
+@property (nonatomic) CGFloat maxWidthLandscape;
+@property (nonatomic) NSArray *blockTags;
+@property (nonatomic) NSArray *removeTags;
+@property (nonatomic) NSString *fontFamily;
+@property (nonatomic) CGFloat fontSize;
+@property (nonatomic) CGFloat lineHeight;
+@property (nonatomic) NSString *defaultImagePath;
+@property (nonatomic) BOOL disableAHrefForImages;
+@property (nonatomic) NSString *additionalStyle;
 
-// Callbacks
-@property (copy) ImagePathBlock         imageLoading;
-@property (copy) ImageClickBlock        imageClick;
-@property (copy) UrlClickBlock          urlClick;
+- (void)loadHtmlBody:(NSString *)html;
 
-- (void)loadHtmlBody:(NSString*)html competition:(CompetitionBlock)competition;
 - (void)clean;
 
 // JS API
-- (NSString*)stringByEvaluatingJavaScriptFromString:(NSString*)script;
+- (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
+
+- (void)prepeareForRelease;
+
+@end
+
+@protocol CMHTMLViewDelegate <NSObject>
+
+@optional
+
+- (void)htmlViewDidFinishLoad:(CMHTMLView *)htmlView withError:(NSError *)error;
+
+- (void)htmlViewDidScroll:(CMHTMLView *)htmlView;
+
+- (void)htmlViewDidTapImage:(CMHTMLView *)htmlView imageUrl:(NSString *)imageUrl;
+
+- (void)htmlViewDidTapLink:(CMHTMLView *)htmlView linkUrl:(NSString *)linkUrl;
 
 @end
