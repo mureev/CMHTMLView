@@ -21,7 +21,6 @@
 		ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0D714ECCCAE007E85C8 /* VideoViewController.m */; };
 		ADB1B0FA14ECEE0A007E85C8 /* Simple.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0F914ECEE0A007E85C8 /* Simple.html */; };
 		ADB1B0FC14ECF0C3007E85C8 /* WarAndPeace.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */; };
-		ADB1B0FF14ECF375007E85C8 /* RotatingTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */; };
 		ADB1B10114ED0783007E85C8 /* Video.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10014ED0783007E85C8 /* Video.html */; };
 		ADE6DA4714EE731E00D57312 /* NetworkQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE6DA3F14EE731E00D57312 /* NetworkQueue.m */; };
 		ADE7438A15D3825100937E7B /* CMHTMLView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7438915D3825100937E7B /* CMHTMLView.m */; };
@@ -51,8 +50,6 @@
 		ADB1B0D714ECCCAE007E85C8 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		ADB1B0F914ECEE0A007E85C8 /* Simple.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Simple.html; sourceTree = "<group>"; };
 		ADB1B0FB14ECF0C3007E85C8 /* WarAndPeace.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = WarAndPeace.html; sourceTree = "<group>"; };
-		ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RotatingTabBarController.h; path = Demo/RotatingTabBarController.h; sourceTree = SOURCE_ROOT; };
-		ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RotatingTabBarController.m; path = Demo/RotatingTabBarController.m; sourceTree = SOURCE_ROOT; };
 		ADB1B10014ED0783007E85C8 /* Video.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = Video.html; sourceTree = "<group>"; };
 		ADE6DA3E14EE731E00D57312 /* NetworkQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkQueue.h; sourceTree = "<group>"; };
 		ADE6DA3F14EE731E00D57312 /* NetworkQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkQueue.m; sourceTree = "<group>"; };
@@ -115,8 +112,6 @@
 				ADE6DA3114EE731E00D57312 /* Core */,
 				AD4D9F5D14ECCBF400E0EB9F /* AppDelegate.h */,
 				AD4D9F5E14ECCBF400E0EB9F /* AppDelegate.m */,
-				ADB1B0FD14ECF375007E85C8 /* RotatingTabBarController.h */,
-				ADB1B0FE14ECF375007E85C8 /* RotatingTabBarController.m */,
 				ADB1B0CA14ECCCAA007E85C8 /* Resources */,
 				AD4D9F5514ECCBF400E0EB9F /* Supporting Files */,
 			);
@@ -306,7 +301,6 @@
 				ADB1B0DA14ECCCAE007E85C8 /* OfflineImagesViewController.m in Sources */,
 				ADB1B0DB14ECCCAE007E85C8 /* TranslucentViewController.m in Sources */,
 				ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */,
-				ADB1B0FF14ECF375007E85C8 /* RotatingTabBarController.m in Sources */,
 				ADE6DA4714EE731E00D57312 /* NetworkQueue.m in Sources */,
 				ADE7438A15D3825100937E7B /* CMHTMLView.m in Sources */,
 			);

@@ -7,9 +7,6 @@
 
 #import "AppDelegate.h"
 
-// add rotation to UITabBarViewController
-#import "RotatingTabBarController.h"
-
 #import "SimpleTextViewController.h"
 #import "OfflineImagesViewController.h"
 #import "HugeTextViewController.h"
@@ -50,7 +47,7 @@
     UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:translucentViewController];
     navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         
-    self.tabBarController = [[RotatingTabBarController alloc] init];
+    self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:simpleTextViewController, offlineImagesViewController, hugeTextViewController, videoViewController, navController, nil];
     
     self.window.rootViewController = self.tabBarController;
