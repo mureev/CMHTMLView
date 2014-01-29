@@ -31,8 +31,6 @@ typedef void (^SetImagePathBlock)(NSString *path);
 - (void)loadHtmlBody:(NSString *)html;
 - (void)prepareForReuse;
 
-- (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
-
 @end
 
 @protocol CMHTMLViewDelegate <NSObject>

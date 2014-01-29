@@ -141,10 +141,6 @@ void NSProfile(const char *name, void (^work)(void)) {
     self.imgURLforHash = [NSMutableDictionary dictionary];
 }
 
-- (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script {
-    return [self.webView stringByEvaluatingJavaScriptFromString:script];
-}
-
 
 #pragma mark - KVO
 
