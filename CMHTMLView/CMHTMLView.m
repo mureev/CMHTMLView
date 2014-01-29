@@ -22,19 +22,17 @@
 
 @interface CMHTMLView () <UIWebViewDelegate>
 
-@property (nonatomic) BOOL loaded;
-@property (nonatomic) UIWebView *webView;
+@property (nonatomic, readwrite) UIWebView *webView;
+
+@property (nonatomic, getter = isLoading) BOOL loading;
+@property (nonatomic) CGPoint lastContentOffset;
 @property (nonatomic) NSString *jsCode;
 @property (nonatomic) NSMutableDictionary *imgURLforHash;
-@property (nonatomic) NSMutableArray *imgURLs;
-@property (nonatomic) CGPoint lastContentOffset;
-
 @end
 
 @implementation CMHTMLView
 
 @dynamic scrollView;
-
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -59,23 +57,15 @@
 
         self.jsCode = [NSString string];
         self.imgURLforHash = [NSMutableDictionary dictionary];
-        self.imgURLs = [NSMutableArray array];
 
         [self setDefaultValues];
-
-        // Clean al variables
-        [self clean];
+        [self prepareForReuse];
     }
     return self;
 }
 
-- (void)prepeareForRelease {
-    self.webView.delegate = nil;
-}
-
 - (void)dealloc {
     [self.scrollView removeObserver:self forKeyPath:@"contentOffset"];
-
     self.webView.delegate = nil;
 }
 
@@ -88,8 +78,6 @@
 }
 
 - (void)loadHtmlBody:(NSString *)html {
-    //[self clean];
-
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *loadHTML = [self prepareImagesInHtml:html];
         loadHTML = [self loadImagesBasedOnHtml:loadHTML];
@@ -139,16 +127,15 @@
     });
 }
 
-- (void)clean {
+- (void)prepareForReuse {
     // stop loading UIWebView
     [self.webView stopLoading];
 
     // fast cleaning web view
     [self.webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML = \"\";"];
 
-    self.loaded = NO;
+    self.loading = NO;
     self.jsCode = [NSString string];
-    self.imgURLs = [NSMutableArray array];
     self.imgURLforHash = [NSMutableDictionary dictionary];
 }
 
@@ -162,7 +149,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"contentOffset"]) {
-        if (self.loaded && !CGPointEqualToPoint(self.lastContentOffset, self.scrollView.contentOffset)) {
+        if (!self.isLoading && !CGPointEqualToPoint(self.lastContentOffset, self.scrollView.contentOffset)) {
             self.lastContentOffset = self.scrollView.contentOffset;
             
             if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewDidScroll:)]) {
@@ -208,7 +195,6 @@
         NSString *src = [html substringWithRange:srcRange];
         NSString *hash = [CMHTMLView md5OfString:src];
         [self.imgURLforHash setObject:src forKey:hash];
-        [self.imgURLs addObject:src];
 
         // Add uniq id to img tag
         NSString *img = [NSString stringWithFormat:@"<img id=\"%@\" src=\"%@\"/alt=\"%@\">", hash, src, NSLocalizedString(@"CMHTMLView_Image_Alt", nil)];
@@ -265,12 +251,11 @@
 - (NSString *)loadImagesBasedOnHtml:(NSString *)html {
     if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewWillWaitForImage:imageUrl:imagePath:)]) {
         for (NSString *hash in [self.imgURLforHash allKeys]) {
-            NSMutableArray *tmpImgURLs = self.imgURLs;
             NSString *src = [self.imgURLforHash objectForKey:hash];
 
             if (src && src.length > 0 && hash && hash.length > 0) {
                 [self.delegate htmlViewWillWaitForImage:self imageUrl:src imagePath:^(NSString *path) {
-                    if (self.loaded) {
+                    if (!self.isLoading) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             if (path && [path length] > 0) {
                                 // reload image with js
@@ -287,12 +272,7 @@
                             // reload image with js
                             NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
                             self.jsCode = [self.jsCode stringByAppendingString:js];
-                        } else {
-                            // disable image
-                            if (tmpImgURLs) {
-                                [tmpImgURLs removeObject:src];
-                            }
-                            
+                        } else {                            
                             if (self.jsCode) {
                                 NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
                                 self.jsCode = [self.jsCode stringByAppendingString:js];
@@ -460,11 +440,8 @@
     return NO;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-}
-
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    self.loaded = YES;
+    self.loading = NO;
 
     // make shure what all modifications of self.jsCode property are done
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1);

@@ -15,6 +15,7 @@ typedef void (^SetImagePathBlock)(NSString *path);
 @interface CMHTMLView : UIView
 
 @property (nonatomic, weak) id <CMHTMLViewDelegate> delegate;
+@property (nonatomic, readonly) UIWebView *webView;
 @property (nonatomic, readonly) UIScrollView *scrollView;
 
 @property (nonatomic) CGFloat maxWidthPortrait;
@@ -29,13 +30,9 @@ typedef void (^SetImagePathBlock)(NSString *path);
 @property (nonatomic) NSString *additionalStyle;
 
 - (void)loadHtmlBody:(NSString *)html;
+- (void)prepareForReuse;
 
-- (void)clean;
-
-// JS API
 - (NSString *)stringByEvaluatingJavaScriptFromString:(NSString *)script;
-
-- (void)prepeareForRelease;
 
 @end
 
