@@ -1,9 +1,6 @@
-# CMHTMLView (under new version development!) ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
+# CMHTMLView ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
-[![Badge w/ Version](https://cocoapod-badges.herokuapp.com/v/CMHTMLView/badge.png)](http://cocoadocs.org/docsets/CMHTMLView)
-[![Badge w/ Platform](https://cocoapod-badges.herokuapp.com/p/CMHTMLView/badge.png)](http://cocoadocs.org/docsets/CMHTMLView)
-
-**Simple, stable, powerfull rich content control (HTML) for iOS developers.**
+##Project still under deep refactoring. Current stable version in cocoapods - 0.2.0 or can use previous version with old API - 0.0.1
 
 ![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Text")
 ![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png?raw=true "Offline Images")
