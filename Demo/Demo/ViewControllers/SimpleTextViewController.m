@@ -9,44 +9,56 @@
 #import "CMHTMLView.h"
 
 
+@interface SimpleTextViewController () <CMHTMLViewDelegate>
+
+@end
+
 @implementation SimpleTextViewController
 
 
 - (void)viewDidLoad {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    
     CMHTMLView* htmlView = [[CMHTMLView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    htmlView.backgroundColor = [UIColor whiteColor];
+    
+    htmlView.delegate = self;
+    htmlView.alpha = 0;
     htmlView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"Simple" ofType:@"html"];  
-    NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
-    NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
-    
-    htmlView.alpha = 1;
-    
-    /*
-    htmlView.urlClick = ^(NSString* url) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert show];
-    };
-    
-    htmlView.imageClick = ^(NSString* url) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image Click" message:url delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
-        [alert show];
-    };
-    */
-    
-    [htmlView loadHtmlBody:htmlString];
+    [htmlView loadHtmlBody:[self readHTMLContentFromFile:@"Simple"]];
     
     [self.view addSubview:htmlView];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (NSString *)readHTMLContentFromFile:(NSString *)fileName {
+    NSString* filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:@"html"];
+    NSData* htmlData = [NSData dataWithContentsOfFile:filePath];
+    NSString* htmlString = [[NSString alloc] initWithData:htmlData encoding:NSUTF8StringEncoding];
+    return htmlString;
+}
+
+
+#pragma mark - CMHTMLViewDelegate
+
+
+- (void)htmlViewDidFinishLoad:(CMHTMLView *)htmlView withError:(NSError *)error {
+    if (!error) {
+        [UIView animateWithDuration:0.2 animations:^{
+            htmlView.alpha = 1;
+        }];
     } else {
-        return YES;
+        htmlView.alpha = 0;
     }
+}
+
+- (void)htmlViewDidTapImage:(CMHTMLView *)htmlView imageUrl:(NSString *)imageUrl {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Image!" message:imageUrl delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)htmlViewDidTapLink:(CMHTMLView *)htmlView linkUrl:(NSString *)linkUrl {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"URL!" message:linkUrl delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

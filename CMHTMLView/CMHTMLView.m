@@ -39,6 +39,8 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        
         self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         self.webView.backgroundColor = [UIColor clearColor];
         self.webView.opaque = NO;
@@ -463,8 +465,7 @@
     self.loaded = YES;
 
     // make shure what all modifications of self.jsCode property are done
-    double delayInSeconds = 0.1;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
         if (self.jsCode) {
             [self.webView stringByEvaluatingJavaScriptFromString:self.jsCode];

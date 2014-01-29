@@ -143,10 +143,10 @@
 		ADB1B0CD14ECCCAE007E85C8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				ADB1B0CE14ECCCAE007E85C8 /* HugeTextViewController.h */,
-				ADB1B0CF14ECCCAE007E85C8 /* HugeTextViewController.m */,
 				ADB1B0D014ECCCAE007E85C8 /* SimpleTextViewController.h */,
 				ADB1B0D114ECCCAE007E85C8 /* SimpleTextViewController.m */,
+				ADB1B0CE14ECCCAE007E85C8 /* HugeTextViewController.h */,
+				ADB1B0CF14ECCCAE007E85C8 /* HugeTextViewController.m */,
 				ADB1B0D214ECCCAE007E85C8 /* OfflineImagesViewController.h */,
 				ADB1B0D314ECCCAE007E85C8 /* OfflineImagesViewController.m */,
 				ADB1B0D414ECCCAE007E85C8 /* TranslucentViewController.h */,
