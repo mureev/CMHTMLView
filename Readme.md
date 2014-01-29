@@ -1,6 +1,6 @@
 # CMHTMLView ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
-##Project still under deep refactoring. Current stable version in cocoapods - 0.2.0 or can use previous version with old API - 0.0.1
+##Project still under deep refactoring. Current stable version in cocoapods - 0.2.0 or you can use previous version with old API - 0.0.1
 
 ![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Text")
 ![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png?raw=true "Offline Images")
