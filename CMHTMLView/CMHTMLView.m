@@ -132,7 +132,10 @@
         // Start loading
         NSString *path = [[NSBundle mainBundle] bundlePath];
         NSURL *baseURL = [NSURL fileURLWithPath:path];
-        [self.webView loadHTMLString:body baseURL:baseURL];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.webView loadHTMLString:body baseURL:baseURL];
+        });
     });
 }
 
