@@ -21,7 +21,6 @@ typedef void (^SetImagePathBlock)(NSString *path);
 @property (nonatomic) CGFloat maxWidthPortrait;
 @property (nonatomic) CGFloat maxWidthLandscape;
 @property (nonatomic) NSArray *blockTags;
-@property (nonatomic) NSArray *removeTags;
 @property (nonatomic) NSString *fontFamily;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) CGFloat lineHeight;

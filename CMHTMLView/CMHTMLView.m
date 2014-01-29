@@ -110,13 +110,6 @@ void NSProfile(const char *name, void (^work)(void)) {
         }
     }
     
-    // Remove some HTML tags
-    if (self.removeTags) {
-        for (NSString *tag in self.removeTags) {
-            loadHTML = [self removeTag:tag html:loadHTML];
-        }
-    }
-    
     // Disable <a href=""> for <img> tags
     if (self.disableAHrefForImages) {
         self.jsCode = [self.jsCode stringByAppendingString:@" var link, img, arr;arr = document.getElementsByTagName('img');for (i in arr) {img = arr[i];link = img.parentNode;if (link && link.tagName.toLowerCase() == 'a') {link.removeAttribute('href');}}"];
@@ -256,25 +249,6 @@ void NSProfile(const char *name, void (^work)(void)) {
                     self.jsCode = [self.jsCode stringByAppendingString:js];
                 }
             }
-        }
-    }
-
-    return html;
-}
-
-- (NSString *)removeTag:(NSString *)tag html:(NSString *)html {
-    NSString *pattern = [NSString stringWithFormat:@"</?\\s*%@[^>]*>", tag];
-    NSRegularExpression *removeTagExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
-
-    NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
-
-    NSInteger rangeOffset = 0;
-    for (NSTextCheckingResult *match in matchs) {
-        NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
-
-        if (tagRange.location + tagRange.length <= html.length) {
-            html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
-            rangeOffset -= tagRange.length;
         }
     }
 

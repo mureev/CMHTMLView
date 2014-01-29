@@ -10,6 +10,6 @@
 
 @interface CMHTMLView (HtmlProcessing)
 
-+ (NSString *)prepareHTML:(NSString *)html;
++ (NSString *)prepareHTML:(NSString *)html removeTags:(NSArray *)removeTags;
 
 @end

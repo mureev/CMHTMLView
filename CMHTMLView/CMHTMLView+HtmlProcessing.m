@@ -10,11 +10,17 @@
 
 @implementation CMHTMLView (HtmlProcessing)
 
-+ (NSString *)prepareHTML:(NSString *)html {
-    html = [CMHTMLView simplifyTablesInHtml:html];
-    html = [CMHTMLView removeExtraLineBreaksInHtml:html];
-    html = [CMHTMLView extendYouTubeSupportInHtml:html];
-    html = [CMHTMLView disableIFrameForNonSupportedSrcInHtml:html];
++ (NSString *)prepareHTML:(NSString *)html removeTags:(NSArray *)removeTags {
+    if (removeTags) {
+        for (NSString *tag in removeTags) {
+            html = [self removeTag:tag html:html];
+        }
+    }
+    
+    html = [self simplifyTablesInHtml:html];
+    html = [self removeExtraLineBreaksInHtml:html];
+    html = [self extendYouTubeSupportInHtml:html];
+    html = [self disableIFrameForNonSupportedSrcInHtml:html];
     return html;
 }
 
@@ -100,6 +106,25 @@
             html = [html stringByReplacingCharactersInRange:iframeRange withString:@""];
             
             rangeOffset -= iframeRange.length;
+        }
+    }
+    
+    return html;
+}
+
++ (NSString *)removeTag:(NSString *)tag html:(NSString *)html {
+    NSString *pattern = [NSString stringWithFormat:@"</?\\s*%@[^>]*>", tag];
+    NSRegularExpression *removeTagExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+    
+    NSArray *matchs = [removeTagExpression matchesInString:html options:0 range:NSMakeRange(0, html.length)];
+    
+    NSInteger rangeOffset = 0;
+    for (NSTextCheckingResult *match in matchs) {
+        NSRange tagRange = NSMakeRange(match.range.location + rangeOffset, match.range.length);
+        
+        if (tagRange.location + tagRange.length <= html.length) {
+            html = [html stringByReplacingCharactersInRange:tagRange withString:@""];
+            rangeOffset -= tagRange.length;
         }
     }
     
