@@ -93,49 +93,47 @@ void NSProfile(const char *name, void (^work)(void)) {
 }
 
 - (void)loadHtmlBody:(NSString *)html {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NSString *loadHTML = [self prepareImagesInHtml:html];
-        loadHTML = [self loadImagesBasedOnHtml:loadHTML];
-        
-        // Add blocking some HTML tags
-        NSString *localacAdditionalStyle = self.additionalStyle;
-        if (!localacAdditionalStyle) {
-            localacAdditionalStyle = @"";
+    self.loading = YES;
+    
+    NSString *loadHTML = [self prepareImagesInHtml:html];
+    loadHTML = [self loadImagesBasedOnHtml:loadHTML];
+    
+    // Add blocking some HTML tags
+    NSString *localacAdditionalStyle = self.additionalStyle;
+    if (!localacAdditionalStyle) {
+        localacAdditionalStyle = @"";
+    }
+    
+    if (self.blockTags) {
+        for (NSString *tag in self.blockTags) {
+            localacAdditionalStyle = [localacAdditionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
         }
-        
-        if (self.blockTags) {
-            for (NSString *tag in self.blockTags) {
-                localacAdditionalStyle = [localacAdditionalStyle stringByAppendingFormat:@"%@ {display:none;}", tag];
-            }
+    }
+    
+    // Remove some HTML tags
+    if (self.removeTags) {
+        for (NSString *tag in self.removeTags) {
+            loadHTML = [self removeTag:tag html:loadHTML];
         }
-        
-        // Remove some HTML tags
-        if (self.removeTags) {
-            for (NSString *tag in self.removeTags) {
-                loadHTML = [self removeTag:tag html:loadHTML];
-            }
-        }
-        
-        // Disable <a href=""> for <img> tags
-        if (self.disableAHrefForImages) {
-            self.jsCode = [self.jsCode stringByAppendingString:@" var link, img, arr;arr = document.getElementsByTagName('img');for (i in arr) {img = arr[i];link = img.parentNode;if (link && link.tagName.toLowerCase() == 'a') {link.removeAttribute('href');}}"];
-        }
-        
-        // Create <head> for page
-        NSString *bodyStyle = [NSString stringWithFormat:kDefaultDocumentBodyStyle, self.fontFamily, self.fontSize, self.lineHeight];
-        NSString *rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait - 18, self.maxWidthLandscape - 18];
-        
-        // Create full page code
-        NSString *body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, localacAdditionalStyle, loadHTML];
-        
-        // Start loading
-        NSString *path = [[NSBundle mainBundle] bundlePath];
-        NSURL *baseURL = [NSURL fileURLWithPath:path];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.webView loadHTMLString:body baseURL:baseURL];
-        });
-    });
+    }
+    
+    // Disable <a href=""> for <img> tags
+    if (self.disableAHrefForImages) {
+        self.jsCode = [self.jsCode stringByAppendingString:@" var link, img, arr;arr = document.getElementsByTagName('img');for (i in arr) {img = arr[i];link = img.parentNode;if (link && link.tagName.toLowerCase() == 'a') {link.removeAttribute('href');}}"];
+    }
+    
+    // Create <head> for page
+    NSString *bodyStyle = [NSString stringWithFormat:kDefaultDocumentBodyStyle, self.fontFamily, self.fontSize, self.lineHeight];
+    NSString *rotateStyle = [NSString stringWithFormat:kDefaultDocumentRotateStyle, self.maxWidthPortrait - 18, self.maxWidthLandscape - 18];
+    
+    // Create full page code
+    NSString *body = [NSString stringWithFormat:@"<html><head><script type=\"text/javascript\">%@</script> %@ <style type=\"text/css\">%@ %@ %@ %@</style></head><body>%@</body></html>", kFastClickJs, kDefaultDocumentMeta, kDefaultDocumentHtmlStyle, bodyStyle, rotateStyle, localacAdditionalStyle, loadHTML];
+    
+    // Start loading
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSURL *baseURL = [NSURL fileURLWithPath:path];
+    
+    [self.webView loadHTMLString:body baseURL:baseURL];
 }
 
 - (void)prepareForReuse {
@@ -228,17 +226,15 @@ void NSProfile(const char *name, void (^work)(void)) {
             if (src && src.length > 0 && hash && hash.length > 0) {
                 [self.delegate htmlViewWillWaitForImage:self imageUrl:src imagePath:^(NSString *path) {
                     if (!self.isLoading) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (path && [path length] > 0) {
-                                // reload image with js
-                                NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
-                                [self.webView stringByEvaluatingJavaScriptFromString:js];
-                            } else {
-                                // disable image
-                                NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
-                                [self.webView stringByEvaluatingJavaScriptFromString:js];
-                            }
-                        });
+                        if (path && [path length] > 0) {
+                            // reload image with js
+                            NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.src ='%@';", hash, path];
+                            [self.webView stringByEvaluatingJavaScriptFromString:js];
+                        } else {
+                            // disable image
+                            NSString *js = [NSString stringWithFormat:@"var obj = document.getElementById('%@'); obj.style.display='none';", hash];
+                            [self.webView stringByEvaluatingJavaScriptFromString:js];
+                        }
                     } else {
                         if (path && [path length] > 0) {
                             // reload image with js
@@ -373,6 +369,8 @@ void NSProfile(const char *name, void (^work)(void)) {
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    self.loading = NO;
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewDidFinishLoad:withError:)]) {
         [self.delegate htmlViewDidFinishLoad:self withError:error];
     }
