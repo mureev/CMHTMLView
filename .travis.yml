@@ -1,0 +1,4 @@
+language: objective-c
+xcode_sdk: iphonesimulator
+xcode_workspace: 'Demo/Demo CMHTMLView.xcworkspace'
+xcode_scheme: 'Demo CMHTMLView'
