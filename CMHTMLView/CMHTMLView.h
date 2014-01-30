@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CommonCrypto/CommonDigest.h> // for MD5 hash
 
 #import "NSString+HtmlProcessing.h"
 

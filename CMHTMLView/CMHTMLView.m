@@ -191,7 +191,7 @@ void NSProfile(const char *name, void (^work)(void)) {
         NSRange imgRange = NSMakeRange([match rangeAtIndex:0].location + rangeOffset, [match rangeAtIndex:0].length);
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString *src = [html substringWithRange:srcRange];
-        NSString *hash = [CMHTMLView md5OfString:src];
+        NSString *hash = [NSString stringWithFormat:@"%d", [src hash]];
         [self.imgURLforHash setObject:src forKey:hash];
 
         // Add uniq id to img tag
@@ -275,18 +275,6 @@ void NSProfile(const char *name, void (^work)(void)) {
             }
         }
     }
-}
-
-+ (NSString *)md5OfString:(NSString *)str {
-    const char *ptr = [str UTF8String];
-    unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(ptr, strlen(ptr), md5Buffer);
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", md5Buffer[i]];
-
-    return output;
 }
 
 
