@@ -43,11 +43,10 @@ void NSProfile(const char *name, void (^work)(void)) {
 @property (nonatomic) CGPoint lastContentOffset;
 @property (nonatomic) NSString *jsCode;
 @property (nonatomic) NSMutableDictionary *imgURLforHash;
+
 @end
 
 @implementation CMHTMLView
-
-@dynamic scrollView;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -68,7 +67,7 @@ void NSProfile(const char *name, void (^work)(void)) {
         [self addSubview:self.webView];
 
         // Add observer for scroll
-        [self.scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+        [self.webView.scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
 
         self.jsCode = [NSString string];
         self.imgURLforHash = [NSMutableDictionary dictionary];
@@ -80,17 +79,13 @@ void NSProfile(const char *name, void (^work)(void)) {
 }
 
 - (void)dealloc {
-    [self.scrollView removeObserver:self forKeyPath:@"contentOffset"];
+    [self.webView.scrollView removeObserver:self forKeyPath:@"contentOffset"];
     self.webView.delegate = nil;
 }
 
 
 #pragma mark - Public
 
-
-- (UIScrollView *)scrollView {
-    return self.webView.scrollView;
-}
 
 - (void)loadHtmlBody:(NSString *)html {
     self.loading = YES;
@@ -147,8 +142,8 @@ void NSProfile(const char *name, void (^work)(void)) {
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"contentOffset"]) {
-        if (!self.isLoading && !CGPointEqualToPoint(self.lastContentOffset, self.scrollView.contentOffset)) {
-            self.lastContentOffset = self.scrollView.contentOffset;
+        if (!self.isLoading && !CGPointEqualToPoint(self.lastContentOffset, self.webView.scrollView.contentOffset)) {
+            self.lastContentOffset = self.webView.scrollView.contentOffset;
             
             if (self.delegate && [self.delegate respondsToSelector:@selector(htmlViewDidScroll:)]) {
                 [self.delegate htmlViewDidScroll:self];

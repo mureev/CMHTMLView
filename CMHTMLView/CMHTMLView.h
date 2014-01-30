@@ -17,7 +17,6 @@ typedef void (^SetImagePathBlock)(NSString *path);
 
 @property (nonatomic, weak) id <CMHTMLViewDelegate> delegate;
 @property (nonatomic, readonly) UIWebView *webView;
-@property (nonatomic, readonly) UIScrollView *scrollView;
 
 @property (nonatomic) CGFloat maxWidthPortrait;
 @property (nonatomic) CGFloat maxWidthLandscape;

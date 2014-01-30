@@ -35,8 +35,8 @@
     htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
     
     htmlView.defaultImagePath = [[[NSBundle mainBundle] URLForResource:@"pixel" withExtension:@"png"] absoluteString];
-    htmlView.scrollView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
-    htmlView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(44, 0, 0, 0);
+    htmlView.webView.scrollView.contentInset = UIEdgeInsetsMake(44, 0, 0, 0);
+    htmlView.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(44, 0, 0, 0);
     
     [htmlView loadHtmlBody:[self readHTMLContentFromFile:@"Image"]];
 }
