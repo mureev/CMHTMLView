@@ -1,4 +1,7 @@
-# CMHTMLView ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
+# CMHTMLView
+
+[![Build Status](https://secure.travis-ci.org/mureev/CMHTMLView.png?branch=master)](http://travis-ci.org/mureev/CMHTMLView)
+![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
 ##Project still under deep refactoring. Current stable version in cocoapods - 0.2.0 or you can use previous version with old API - 0.0.1
 
