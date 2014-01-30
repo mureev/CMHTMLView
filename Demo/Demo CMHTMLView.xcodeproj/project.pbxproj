@@ -24,7 +24,7 @@
 		ADB1B10114ED0783007E85C8 /* Video.html in Resources */ = {isa = PBXBuildFile; fileRef = ADB1B10014ED0783007E85C8 /* Video.html */; };
 		ADE7438A15D3825100937E7B /* CMHTMLView.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE7438915D3825100937E7B /* CMHTMLView.m */; };
 		FC43E7341898EA4A00982A79 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC43E7331898EA4A00982A79 /* Images.xcassets */; };
-		FC43E73818992BD900982A79 /* CMHTMLView+HtmlProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = FC43E73718992BD900982A79 /* CMHTMLView+HtmlProcessing.m */; };
+		FCE25480189A337900419E1D /* NSString+HtmlProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = FCE2547F189A337900419E1D /* NSString+HtmlProcessing.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,8 +56,8 @@
 		B833A107E06040B2AC17B2A5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		ED2363924CD14C589D74AD80 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC43E7331898EA4A00982A79 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		FC43E73618992BD900982A79 /* CMHTMLView+HtmlProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CMHTMLView+HtmlProcessing.h"; sourceTree = "<group>"; };
-		FC43E73718992BD900982A79 /* CMHTMLView+HtmlProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CMHTMLView+HtmlProcessing.m"; sourceTree = "<group>"; };
+		FCE2547E189A337900419E1D /* NSString+HtmlProcessing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HtmlProcessing.h"; sourceTree = "<group>"; };
+		FCE2547F189A337900419E1D /* NSString+HtmlProcessing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HtmlProcessing.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,8 +161,8 @@
 			children = (
 				ADE7438815D3825100937E7B /* CMHTMLView.h */,
 				ADE7438915D3825100937E7B /* CMHTMLView.m */,
-				FC43E73618992BD900982A79 /* CMHTMLView+HtmlProcessing.h */,
-				FC43E73718992BD900982A79 /* CMHTMLView+HtmlProcessing.m */,
+				FCE2547E189A337900419E1D /* NSString+HtmlProcessing.h */,
+				FCE2547F189A337900419E1D /* NSString+HtmlProcessing.m */,
 			);
 			name = CMHTMLView;
 			path = ../../CMHTMLView;
@@ -274,10 +274,10 @@
 				ADB1B0D814ECCCAE007E85C8 /* HugeTextViewController.m in Sources */,
 				ADB1B0D914ECCCAE007E85C8 /* SimpleTextViewController.m in Sources */,
 				ADB1B0DA14ECCCAE007E85C8 /* OfflineImagesViewController.m in Sources */,
-				FC43E73818992BD900982A79 /* CMHTMLView+HtmlProcessing.m in Sources */,
 				ADB1B0DB14ECCCAE007E85C8 /* TranslucentViewController.m in Sources */,
 				ADB1B0DC14ECCCAE007E85C8 /* VideoViewController.m in Sources */,
 				ADE7438A15D3825100937E7B /* CMHTMLView.m in Sources */,
+				FCE25480189A337900419E1D /* NSString+HtmlProcessing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

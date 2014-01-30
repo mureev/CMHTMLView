@@ -11,7 +11,6 @@
 #import <CMDataStorage/CMDataStorage.h>
 
 #import "CMHTMLView.h"
-#import "CMHTMLView+HtmlProcessing.h"
 
 @interface OfflineImagesViewController () <CMHTMLViewDelegate>
 
@@ -32,7 +31,9 @@
     htmlView.blockTags = [NSArray arrayWithObjects:@"iframe", nil];
     htmlView.defaultImagePath = [[[NSBundle mainBundle] URLForResource:@"pixel" withExtension:@"png"] absoluteString];
     
-    NSString *html = [CMHTMLView prepareHTML:[self readHTMLContentFromFile:@"Image"] removeTags:@[@"div"]];
+    
+    NSString *html = [self readHTMLContentFromFile:@"Image"];
+    html = [html prepareHTMLAndRemoveTags:@[@"div"]];
     [htmlView loadHtmlBody:html];
 }
 

@@ -1,28 +1,35 @@
 //
-//  CMHTMLView+HtmlProcessing.m
-//  Demo CMHTMLView
+//  NSString+HtmlProcessing.m
 //
-//  Created by Constantine Mureev on 29/01/14.
+//  Created by Constantine Mureev on 30/01/14.
 //  Copyright (c) 2014 Team Force LLC. All rights reserved.
 //
 
-#import "CMHTMLView+HtmlProcessing.h"
+#import "NSString+HtmlProcessing.h"
 
-@implementation CMHTMLView (HtmlProcessing)
+@implementation NSString (HtmlProcessing)
 
-+ (NSString *)prepareHTML:(NSString *)html removeTags:(NSArray *)removeTags {
+- (NSString *)prepareHTML {
+    return [self prepareHTMLAndRemoveTags:nil];
+}
+
+- (NSString *)prepareHTMLAndRemoveTags:(NSArray *)removeTags {
+    NSString *html = self;
+    
     if (removeTags) {
         for (NSString *tag in removeTags) {
-            html = [self removeTag:tag html:html];
+            html = [NSString removeTag:tag html:html];
         }
     }
     
-    html = [self simplifyTablesInHtml:html];
-    html = [self removeExtraLineBreaksInHtml:html];
-    html = [self extendYouTubeSupportInHtml:html];
-    html = [self disableIFrameForNonSupportedSrcInHtml:html];
+    html = [NSString simplifyTablesInHtml:html];
+    html = [NSString removeExtraLineBreaksInHtml:html];
+    html = [NSString extendYouTubeSupportInHtml:html];
+    html = [NSString disableIFrameForNonSupportedSrcInHtml:html];
+    
     return html;
 }
+
 
 + (NSString *)simplifyTablesInHtml:(NSString *)html {
     static dispatch_once_t onceToken;
@@ -62,6 +69,7 @@
     
     return html;
 }
+
 + (NSString *)extendYouTubeSupportInHtml:(NSString *)html {
     static dispatch_once_t onceToken;
     static NSRegularExpression *youtubeEmbedRegex;
@@ -102,7 +110,7 @@
         NSRange srcRange = NSMakeRange([match rangeAtIndex:1].location + rangeOffset, [match rangeAtIndex:1].length);
         NSString *src = [html substringWithRange:srcRange];
         
-        if (![CMHTMLView shoudAllowURL:src]) {
+        if (![NSString shoudAllowURL:src]) {
             html = [html stringByReplacingCharactersInRange:iframeRange withString:@""];
             
             rangeOffset -= iframeRange.length;
