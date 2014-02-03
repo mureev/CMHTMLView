@@ -5,7 +5,7 @@
 [![Cocoapods](https://cocoapod-badges.herokuapp.com/p/CMHTMLView/badge.png)](http://cocoapods.org/?q=name%3Acmhtmlview%2A)
 ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
-##Deep refactoring completed. Expected API freeze - March 2014. Current version in cocoapods - 0.3.0 or you can use previous version with old API - 0.0.1.
+##Deep refactoring completed. Expected API freeze - March 2014. You can use previous version with old API - 0.0.1.
 
 ![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Text")
 ![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png?raw=true "Offline Images")
