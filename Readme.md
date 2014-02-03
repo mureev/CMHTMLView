@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/mureev/CMHTMLView.png?branch=master)](http://travis-ci.org/mureev/CMHTMLView)
 ![License MIT](https://go-shields.herokuapp.com/license-MIT-blue.png)
 
-##Deep refactoring completed. Expected API freeze in a month. Current version in cocoapods - 0.3.0 or you can use previous version with old API - 0.0.1.
+##Deep refactoring completed. Expected API freeze - March 2014. Current version in cocoapods - 0.3.0 or you can use previous version with old API - 0.0.1.
 
 ![Text](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/Text.png?raw=true "Text")
 ![OfflineImages](http://github.com/mureev/CMHTMLView/blob/master/Demo/Screenshots/OfflineImages.png?raw=true "Offline Images")
