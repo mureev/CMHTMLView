@@ -1,5 +1,7 @@
 # CMHTMLView
 
+Archived in 2026. CMHTMLView wraps UIWebView, which the App Store has not accepted since 2020. For new code use WKWebView, or NSAttributedString / SwiftUI Text for simple rich text. Thanks to everyone who starred, forked and contributed since 2012.
+
 [![Build Status](https://secure.travis-ci.org/mureev/CMHTMLView.png?branch=master)](http://travis-ci.org/mureev/CMHTMLView)
 [![CocoaPods](https://cocoapod-badges.herokuapp.com/v/CMHTMLView/badge.png)](http://cocoapods.org/?q=name%3Acmhtmlview%2A)
 [![CocoaPods](https://cocoapod-badges.herokuapp.com/p/CMHTMLView/badge.png)](http://cocoapods.org/?q=name%3Acmhtmlview%2A)
